@@ -2,14 +2,12 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-03 19:28:31
+ * @LastEditTime: 2023-11-04 23:41:33
  * @FilePath: \puzzle\src\state.rs
  * @Description: 
  * 
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
  */
-use eframe::egui;
-use egui::{Image, Ui};
 
 #[derive(Default)]
 pub struct GameState {
