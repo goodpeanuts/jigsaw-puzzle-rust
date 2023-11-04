@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-03 20:45:37
+ * @LastEditTime: 2023-11-04 18:35:27
  * @FilePath: \puzzle\src\main.rs
  * @Description: 
  * 
@@ -29,12 +29,9 @@ fn main() -> Result<(), eframe::Error>{
         Box::new(|cc| {
             // let egui_ctx = &cc.egui_ctx; // Get the egui::Context from CreationContext
             // game::GameApp::setup(&egui_ctx); // Call the setup function here
-            let egui_ctx = &cc.egui_ctx; // Create a new egui::Context
-            egui_extras::install_image_loaders(egui_ctx);
+            //let egui_ctx = &cc.egui_ctx; // Create a new egui::Context
+            //egui_extras::install_image_loaders(egui_ctx);
             Box::new(game::GameApp::new(cc)) // Store GameApp in the heap using Box::new
         }),
     )
 }
-
-//game::GameApp::setup(cc); // Call the setup function here
-// game::GameApp::new(cc)

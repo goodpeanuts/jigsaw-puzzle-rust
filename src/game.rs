@@ -1,20 +1,34 @@
-use eframe::{egui::{self, Image}, epaint::vec2};
+/*
+ * @Author: goodpeanuts goodpeanuts@foxmail.com
+ * @Date: 2023-11-03 14:35:18
+ * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
+ * @LastEditTime: 2023-11-04 22:03:39
+ * @FilePath: \puzzle\src\game.rs
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
+ */
+use eframe::{egui::{self, Image, ColorImage, Color32}};
 use egui_extras;
 use eframe::CreationContext;
 use eframe::egui::load::Bytes;
-use image::{DynamicImage, GenericImageView, EncodableLayout};
+use image::{DynamicImage, GenericImageView, EncodableLayout, io::Reader};
+use std::io::Cursor;
 
 use crate::{config, state,imgs};
 
 
-pub struct GameApp<'a> {
+
+pub struct GameApp {
     pub state: state::GameState,
     imgs: imgs::Images,
     pub count: u32,
-    pub pieces: Vec<egui::Image<'a>>,
+    pub pieces: Vec<Vec<u8>>,
+    pub start: bool,
 }
 
-impl <'a>GameApp<'a> {
+impl GameApp {
+
     pub fn split_image(&mut self, cc: &egui::Context) {
         let mut img = image::load_from_memory(self.imgs.pic).expect("Failed to load image");
         let (width, height) = img.dimensions();
@@ -24,82 +38,79 @@ impl <'a>GameApp<'a> {
             for j in 0..self.count {
                 let x = sub_width * i as u32;
                 let y = sub_height * j as u32;
+                print!("{}\n", i * self.count + j);
                 let sub_image = img.crop(x, y, sub_width, sub_height);
-                // 将临时值存储到一个变量中，以延长它的生命周期
-                let sub_image_bytes = sub_image.as_bytes();
-                let sub_image_data: Vec<u8> = sub_image_bytes.to_vec(); // 将 &[u8] 转换成 Vec<u8>
 
-                let sub_image1 = egui::Image::from_bytes((i + j).to_string(), sub_image_data.clone());
+                let mut buf: Cursor<Vec<u8>> = Cursor::new(Vec::new());
+                sub_image.write_to(&mut buf, image::ImageOutputFormat::Png).unwrap();
 
-                cc.include_bytes((i+j).to_string(), sub_image_data.clone());
-                self.pieces.push(sub_image1.clone());
+                let bytes = buf.into_inner();
+
+                cc.include_bytes(format!("bytes://{}", i * self.count + j), GameApp::get_static_u8(&bytes));
+                // let bytes_uri = format!("bytes://{}", i * self.count + j);
+                cc.include_bytes(format!("bytes://{}", 99), self.imgs.pic);
             }
         }
     }
 
-    pub fn to_uri(&self, index: usize) -> String {
-        format!("bytes://{}", index)
+
+    fn get_static_u8(bytes: &Vec<u8>) -> &'static [u8] {
+        let x = bytes.clone().into_boxed_slice();
+        let static_ref = Box::leak(x);
+        &static_ref[..]
     }
+
     
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         config::custom_font(cc);
         GameApp {
             state: state::GameState::default(),
-            count: 3,
+            count: 9,
             imgs: imgs::Images::new(),
             pieces: vec![],
+            start: false,
         }
     }
 
     pub fn setup(&mut self, cc: &egui::Context) {
-        egui_extras::install_image_loaders(cc);
- 
-        self.split_image(cc);
-
-        let mut img = image::load_from_memory(self.imgs.pic).expect("Failed to load image");
-        let image_bytes = img.as_bytes();
-        let image_data: Vec<u8> = image_bytes.to_vec(); // 将 &[u8] 转换成 Vec<u8>
-
-        // let image1 = egui::Image::from_bytes("bytes://1", image_data.clone());
-
-        cc.include_bytes("bytes://1", image_data.clone());
-
+        //egui_extras::install_image_loaders(cc);
     }
 }   
 
-impl <'a>eframe::App for GameApp<'a> {
+impl eframe::App for GameApp {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        egui_extras::install_image_loaders(ctx);
+        
+        
+ 
+        if !self.start {
+            egui_extras::install_image_loaders(ctx);
+            //ctx.add_bytes_loader(loader::load_image);
+
+            self.split_image(ctx);
+            // self.process_pieces(ctx);
+            self.start = true;
+        }
+        
+        
 
         egui::CentralPanel::default().show(ctx, 
             |ui|{
-                ctx.include_bytes("bytes://1", self.imgs.pic.as_bytes().to_vec());
-                ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 0.0);
-                // for _i in 0..3 {
-                //     ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 0.0);
-                //     ui.horizontal(|ui|{
-                //         for _j in 0..3 {
-                //             ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 0.0);
-                //             ui.add_sized([200.0, 200.0], egui::Image::new(egui::include_image!("../assets/img/0.jpg")).max_size(vec2(200.0, 200.0)));
-                //         } 
-                //     });
-                //     //ui.end_row();
-                // }
 
-                for i in 0..3 {
-                    ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 0.0);
+                ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 1.0);
+
+                for i in 0..self.count {
+                    ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 1.0);
                     ui.horizontal(|ui| {
-                        for j in 0..3 {
+                        for j in 0..self.count {
                             ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 0.0);
-                            let index = i * 3 + j; // Calculate the index for pieces vector
+                            let index = j * self.count + i; // Calculate the index for pieces vector
 
-                                let idx = index.to_string();
-                                ui.add_sized([280.0, 280.0], egui::Image::from_uri("bytes://1"));
+                                ui.add_sized([840.0 / self.count as f32, 840.0 / self.count as f32], egui::Image::from_uri(format!("bytes://{}", index)));
+
+
                         }
                     });
                 }
-                
-
             }); 
         
     }

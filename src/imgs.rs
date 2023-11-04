@@ -2,15 +2,15 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 21:18:49
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-04 10:34:58
+ * @LastEditTime: 2023-11-04 18:54:45
  * @FilePath: \puzzle\src\imgs.rs
  * @Description: 
  * 
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
  */
-use eframe::egui;
-use image;
-use image::{DynamicImage, GenericImageView};
+// use eframe::egui;
+// use image;
+// use image::{DynamicImage, GenericImageView};
 
 const IMAGE_1: &'static [u8] = include_bytes!("../assets/img/6.png");
 
