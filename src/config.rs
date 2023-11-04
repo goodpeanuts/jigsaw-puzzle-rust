@@ -1,6 +1,17 @@
+/*
+ * @Author: goodpeanuts goodpeanuts@foxmail.com
+ * @Date: 2023-11-03 14:35:18
+ * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
+ * @LastEditTime: 2023-11-03 18:56:27
+ * @FilePath: \puzzle\src\config.rs
+ * @Description: help display chinese characters in egui
+ * 
+ * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
+ */
+
 use eframe::egui;
 
-pub(crate) fn custom_font(cc: &eframe::CreationContext<'_>){
+pub fn custom_font(cc: &eframe::CreationContext<'_>){
     // Start with the default fonts (we will be adding to them rather than replacing them).
     let mut fonts = egui::FontDefinitions::default();
 
