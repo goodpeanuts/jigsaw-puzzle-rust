@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-06 01:02:05
+ * @LastEditTime: 2023-11-06 19:45:20
  * @FilePath: \puzzle\src\main.rs
  * @Description: 
  * 
@@ -40,16 +40,16 @@ fn main() -> Result<(), eframe::Error>{
 
 pub fn setup(cc: &egui::Context) {
     egui_extras::install_image_loaders(cc);
-    cc.include_bytes(format!("bytes://{}", 100), imgs::IMAGE_1);
-    cc.include_bytes(format!("bytes://{}", 99), imgs::IMAGE_2);
-    cc.include_bytes(format!("bytes://{}", 98), imgs::IMAGE_3);
-    cc.include_bytes(format!("bytes://{}", 97), imgs::IMAGE_4);
-    cc.include_bytes(format!("bytes://{}", 96), imgs::IMAGE_5);
-    cc.include_bytes(format!("bytes://{}", 95), imgs::IMAGE_6);
-    cc.include_bytes(format!("bytes://{}", 94), imgs::IMAGE_7);
-    cc.include_bytes(format!("bytes://{}", 93), imgs::IMAGE_8);
-    cc.include_bytes(format!("bytes://{}", 92), imgs::IMAGE_9);
-    cc.include_bytes(format!("bytes://{}", 91), imgs::IMAGE_10);
-    cc.include_bytes(format!("bytes://{}", 90), imgs::IMAGE_11);
-    cc.include_bytes(format!("bytes://{}", 89), imgs::IMAGE_12);
+    cc.include_bytes(format!("bytes://x{}", 1), imgs::IMAGE_1);
+    cc.include_bytes(format!("bytes://x{}", 2), imgs::IMAGE_2);
+    cc.include_bytes(format!("bytes://x{}", 3), imgs::IMAGE_3);
+    cc.include_bytes(format!("bytes://x{}", 4), imgs::IMAGE_4);
+    cc.include_bytes(format!("bytes://x{}", 5), imgs::IMAGE_5);
+    cc.include_bytes(format!("bytes://x{}", 6), imgs::IMAGE_6);
+    cc.include_bytes(format!("bytes://x{}", 7), imgs::IMAGE_7);
+    cc.include_bytes(format!("bytes://x{}", 8), imgs::IMAGE_8);
+    cc.include_bytes(format!("bytes://x{}", 9), imgs::IMAGE_9);
+    cc.include_bytes(format!("bytes://x{}", 10), imgs::IMAGE_10);
+    cc.include_bytes(format!("bytes://x{}", 11), imgs::IMAGE_11);
+    cc.include_bytes(format!("bytes://x{}", 12), imgs::IMAGE_12);
 }

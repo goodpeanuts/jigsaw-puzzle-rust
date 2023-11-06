@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 21:18:49
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-06 00:58:31
+ * @LastEditTime: 2023-11-06 19:43:22
  * @FilePath: \puzzle\src\imgs.rs
  * @Description: 
  * 
@@ -25,18 +25,19 @@ pub const IMAGE_10: &'static [u8] = include_bytes!("../assets/img/10.png");
 pub const IMAGE_11: &'static [u8] = include_bytes!("../assets/img/12.png");
 pub const IMAGE_12: &'static [u8] = include_bytes!("../assets/img/12.png");
 
-pub const IMAGE_URI_1: &'static str = "bytes://100";
-pub const IMAGE_URI_2: &'static str = "bytes://99";
-pub const IMAGE_URI_3: &'static str = "bytes://98";
-pub const IMAGE_URI_4: &'static str = "bytes://97";
-pub const IMAGE_URI_5: &'static str = "bytes://96";
-pub const IMAGE_URI_6: &'static str = "bytes://95";
-pub const IMAGE_URI_7: &'static str = "bytes://94";
-pub const IMAGE_URI_8: &'static str = "bytes://93";
-pub const IMAGE_URI_9: &'static str = "bytes://92";
-pub const IMAGE_URI_10: &'static str = "bytes://91";
-pub const IMAGE_URI_11: &'static str = "bytes://90";
-pub const IMAGE_URI_12: &'static str = "bytes://89";
+pub const IMAGE_URI_1: &'static str = "bytes://x1";
+pub const IMAGE_URI_2: &'static str = "bytes://x2";
+pub const IMAGE_URI_3: &'static str = "bytes://x3";
+pub const IMAGE_URI_4: &'static str = "bytes://x4";
+pub const IMAGE_URI_5: &'static str = "bytes://x5";
+pub const IMAGE_URI_6: &'static str = "bytes://x6";
+pub const IMAGE_URI_7: &'static str = "bytes://x7";
+pub const IMAGE_URI_8: &'static str = "bytes://x8";
+pub const IMAGE_URI_9: &'static str = "bytes://x9";
+pub const IMAGE_URI_10: &'static str = "bytes://x10";
+pub const IMAGE_URI_11: &'static str = "bytes://x11";
+pub const IMAGE_URI_12: &'static str = "bytes://x12";
+
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum ImageChoice {
