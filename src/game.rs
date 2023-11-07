@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-06 23:04:22
+ * @LastEditTime: 2023-11-07 09:08:20
  * @FilePath: \puzzle\src\game.rs
  * @Description:
  *
@@ -88,6 +88,36 @@ impl GameApp {
         }
         self.check_game();
     }
+
+    // 机器人操作复原
+    pub fn recover(&mut self) {
+
+        let gap = self.game_state.step_time.elapsed().as_secs_f64();
+
+        match gap > 0.001 {
+            true => {
+                self.game_state.step_time = Instant::now();
+                
+            }
+            false => {
+                return;
+            }
+        }
+
+        let pos_len = self.game_state.count * self.game_state.count;
+        //写个冒泡排序
+        for i in 0..pos_len {
+            for j in 0..pos_len - i - 1 {
+                if self.game_state.pos[j as usize] > self.game_state.pos[(j + 1) as usize] {
+                    self.game_state.exchange.push(j);
+                    self.game_state.exchange.push(j + 1);
+                    self.exchange_piece();
+                    return;
+                }
+            }
+        }
+    }
+    
 
     // 计算返回游戏进行时长
     pub fn get_elasp_time_str(&mut self) -> String {
@@ -176,6 +206,9 @@ impl eframe::App for GameApp {
             state::Nav::Game => {
                 self.playground(ctx, ui);
                 self.game_side(ctx, ui);
+                if self.game_state.bot {
+                    self.recover();
+                }
             }
         });
     }

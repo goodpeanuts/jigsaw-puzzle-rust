@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:15:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-06 23:54:26
+ * @LastEditTime: 2023-11-07 08:20:51
  * @FilePath: \puzzle\src\view_playground.rs
  * @Description: 
  * 
@@ -111,14 +111,16 @@ impl GameApp {
                    
                    ui.allocate_ui_at_rect(rect, |ui| {
                        ui.allocate_ui_at_rect(rect, |ui| {
+                            
+                            
                            let response = ui.add_sized([840.0 / self.game_state.count as f32, 840.0 / self.game_state.count as f32], egui::Image::from_uri(self.game_state.pieces[index as usize].uri.clone())).interact(egui::Sense::click());
                            
-                           if response.hovered(){
+                           if !self.game_state.bot && response.hovered(){
                                ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
                                
                            };
 
-                           if response.clicked() {
+                           if !self.game_state.bot && response.clicked() {
                                /********** 用于调试 ************/
                                // 打印点击的位置
                                print!("{} ", pos);
@@ -261,6 +263,22 @@ impl GameApp {
                     if return_resp.clicked() {
                         self.ui_state.nav = state::Nav::Home;
                         self.game_state.reset_game_state();
+                    }
+
+                    let bot_resp = ui
+                    .add_sized(
+                        [80.0, 19.0],
+                        egui::SelectableLabel::new(
+                            self.game_state.bot,
+                            egui::RichText::new("bot").size(15.0),
+                        ),
+                    );
+
+                    if bot_resp.clicked() {
+                        match self.game_state.bot {
+                            true => self.game_state.bot = false,
+                            false => self.game_state.bot = true,
+                        }
                     }
                 });
                     // ui.add_space(60.0);

@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-07 00:22:59
+ * @LastEditTime: 2023-11-07 08:51:44
  * @FilePath: \puzzle\src\state.rs
  * @Description:
  *
@@ -44,6 +44,8 @@ pub struct GameState {
     pub rest: f64,
     pub custom: bool,
     pub custom_str: String,
+    pub bot: bool,
+    pub step_time: time::Instant,
 }
 
 impl GameState {
@@ -63,6 +65,8 @@ impl GameState {
             rest: 300.0,
             custom: false,
             custom_str: String::new(),
+            bot: false,
+            step_time: time::Instant::now(),
         };
         gamestate
     }
@@ -88,6 +92,8 @@ impl GameState {
         self.rest = 300.0;
         self.custom = false;
         self.custom_str = String::new();
+        self.bot = false;
+        self.step_time = time::Instant::now();
     }
 }
 

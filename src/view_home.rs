@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:23:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-07 00:28:56
+ * @LastEditTime: 2023-11-07 09:04:45
  * @FilePath: \puzzle\src\view_home.rs
  * @Description:
  *
@@ -55,7 +55,9 @@ impl GameApp {
                             .clicked()
                         {
                             self.game_state.count = 3;
+                            self.game_state.custom = false;
                         }
+
                         if ui
                             .add_sized(
                                 [80.0, 19.0],
@@ -67,6 +69,7 @@ impl GameApp {
                             .clicked()
                         {
                             self.game_state.count = 5;
+                            self.game_state.custom = false;
                         }
                         if ui
                             .add_sized(
@@ -79,6 +82,7 @@ impl GameApp {
                             .clicked()
                         {
                             self.game_state.count = 8;
+                            self.game_state.custom = false;
                         }
                         if ui
                             .add_sized(
