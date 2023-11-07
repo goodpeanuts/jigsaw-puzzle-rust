@@ -15,3 +15,4 @@ pub mod imgs;
 pub mod view_playground;
 pub mod view_home;
 pub mod custom_widget;
+pub mod view_gameside;

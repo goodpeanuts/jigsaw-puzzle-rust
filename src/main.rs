@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-06 19:45:20
+ * @LastEditTime: 2023-11-07 10:28:56
  * @FilePath: \puzzle\src\main.rs
  * @Description: 
  * 
@@ -19,6 +19,8 @@ use puzzle::imgs;
 fn main() -> Result<(), eframe::Error>{
     let options = eframe::NativeOptions {
         initial_window_size: Some(egui::vec2(1200.0, 900.0)), // 设置窗口的宽度和高度
+        resizable: false, // 设置窗口是否可以调整大小
+        hardware_acceleration: eframe::HardwareAcceleration::Required, // 设置是否使用硬件加速
         ..Default::default() // 使用其他默认选项
     };
     // eframe::run_native(

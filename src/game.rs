@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-07 09:08:20
+ * @LastEditTime: 2023-11-08 00:24:28
  * @FilePath: \puzzle\src\game.rs
  * @Description:
  *
@@ -18,7 +18,7 @@ use rand::prelude::SliceRandom;
 use std::io::Cursor;
 use std::time::{Duration, Instant};
 
-use crate::{config, imgs, state};
+use crate::{config, imgs, state, view_playground};
 
 pub struct GameApp {
     pub ui_state: state::UiState,
@@ -92,17 +92,17 @@ impl GameApp {
     // 机器人操作复原
     pub fn recover(&mut self) {
 
-        let gap = self.game_state.step_time.elapsed().as_secs_f64();
+        // let gap = self.game_state.step_time.elapsed().as_secs_f64();
 
-        match gap > 0.001 {
-            true => {
-                self.game_state.step_time = Instant::now();
+        // match gap > 0.05 {
+        //     true => {
+        //         self.game_state.step_time = Instant::now();
                 
-            }
-            false => {
-                return;
-            }
-        }
+        //     }
+        //     false => {
+        //         return;
+        //     }
+        // }
 
         let pos_len = self.game_state.count * self.game_state.count;
         //写个冒泡排序
@@ -180,6 +180,7 @@ impl GameApp {
         if flag {
             self.game_state.win = true;
             self.game_state.end = true;
+            view_playground::set_show_congrulation(true);
             /********** 用于调试 ************/
             println!("You win!");
         }

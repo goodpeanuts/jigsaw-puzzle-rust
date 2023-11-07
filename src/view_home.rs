@@ -98,9 +98,9 @@ impl GameApp {
                             
                         }
                 
-                        
+                        // 自定义碎片数量
                         ui.set_visible(self.game_state.custom);
-                        ui.add_sized([40.0, 40.0], egui::widgets::Slider::new(&mut self.game_state.count, 2..=12).clamp_to_range(true).text(""));
+                        ui.add_sized([40.0, 40.0], egui::widgets::Slider::new(&mut self.game_state.count, 2..=12).clamp_to_range(false).text(""));
                         
                     });
 
