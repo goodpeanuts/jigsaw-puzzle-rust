@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-07 10:31:27
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 00:02:40
+ * @LastEditTime: 2023-11-09 01:20:04
  * @FilePath: \puzzle\src\view_gameside.rs
  * @Description:
  *
@@ -64,25 +64,30 @@ impl GameApp {
                     ui.add_space(50.0);
                     match self.game_state.count {
                         3 => {
-                            ui.label(egui::RichText::new("🔥Easy").size(25.0));
+                            ui.label(egui::RichText::new("✨Easy").size(25.0));
                         }
                         5 => {
                             ui.label(egui::RichText::new("🔥Normal").size(25.0));
                         }
                         8 => {
-                            ui.label(egui::RichText::new("🔥Difficult").size(25.0));
+                            ui.label(egui::RichText::new("💀Difficult").size(25.0));
                         }
                         _ => {
-                            ui.label(egui::RichText::new("🔥Custom").size(25.0));
+                            ui.label(egui::RichText::new("🔧Custom").size(25.0));
                         }
                     }
                     ui.add_space(50.0);
+                    
+
+                    // ui.visuals_mut().widgets.inactive.weak_bg_fill = egui::Color32::from_rgb(51,0,105);
+                    // ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(96,96,96);
+                    // ui.visuals_mut().widgets.active.weak_bg_fill = egui::Color32::from_rgb(96,96,96);
 
                     let bot_resp = ui.add_sized(
                         [120.0, 40.0],
                         egui::SelectableLabel::new(
                             self.game_state.bot,
-                            egui::RichText::new("bot").size(15.0),
+                            egui::RichText::new("🎱 Bot").size(21.0),
                         ),
                     );
 
@@ -93,12 +98,19 @@ impl GameApp {
                         }
                     }
 
+                    if self.game_state.bot {
+                        ui.add_space(5.0);
+                        ui.label(egui::RichText::new("🎉 Magic show").size(16.0).color(egui::Color32::GOLD));
+                    }
+
                     ui.add_space(50.0);
+
+                    ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::LIGHT_BLUE;
 
                     // 这里重开一个ui，不然按钮的长度会因为justified被强制拉长至和layout一样长
                     ui.vertical_centered(|ui| {
                         let show_imgea_resp = ui
-                            .add_sized([120.0, 40.0], egui::Button::new("查看原图"))
+                            .add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Original").size(17.0)))
                             .on_hover_ui(|ui| {
                                 ui.add_sized(
                                     [200.0, 200.0],
@@ -107,7 +119,11 @@ impl GameApp {
                             });
 
                         if show_imgea_resp.clicked() {
-                            set_show_origin_image(true);
+                            if *SHOW_ORIGIN_IMAGE.lock().unwrap(){
+                                set_show_origin_image(false);
+                            } else {
+                                set_show_origin_image(true);
+                            }
                         }
 
                         if *SHOW_ORIGIN_IMAGE.lock().unwrap() {
@@ -120,8 +136,9 @@ impl GameApp {
 
                         ui.add_space(50.0);
 
+                        ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::RED;
                         let return_resp =
-                            ui.add_sized([120.0, 40.0], egui::Button::new("返回菜单"));
+                            ui.add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Exit").size(17.0)));
 
                         if return_resp.clicked() {
                             self.ui_state.nav = state::Nav::Home;

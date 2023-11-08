@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:23:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-08 23:39:49
+ * @LastEditTime: 2023-11-09 01:09:17
  * @FilePath: \puzzle\src\view_home.rs
  * @Description:
  *
@@ -28,7 +28,18 @@ impl GameApp {
                 // ui.add_sized([25.0, 10.0], egui::widgets::Button::new("🔧"));
                 ui.add_space(20.0);
                 ui.vertical_centered(|ui| {
-                    ui.label(egui::RichText::new("🔥Jigsaw Puzzle:").size(28.0));
+
+                    // ui.label(egui::RichText::new("Jigsaw Puzzle").size(32.0).color(egui::Color32::LIGHT_GRAY));
+
+                    if self.game_state.count < 5 {
+                        ui.label(egui::RichText::new("✨ Jigsaw Puzzle").size(32.0));
+                    } else if self.game_state.count < 8 {
+                        ui.label(egui::RichText::new("🔥 Jigsaw Puzzle").size(32.0));
+                    } else if self.game_state.count < 12 {
+                        ui.label(egui::RichText::new("💀 Jigsaw Puzzle").size(32.0));
+                    } else {
+                        ui.label(egui::RichText::new("🎉 Jigsaw Puzzle").size(32.0));
+                    }
 
                     ui.add_space(80.0);
                 });
@@ -49,14 +60,18 @@ impl GameApp {
                             ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(0,204, 0);
                         }
                         let start_resp = ui
-                            .add_sized([130.0, 45.0], Button::new("Start"))
-                            .on_hover_text("Start the game")
+                            .add_sized([130.0, 45.0], Button::new(egui::RichText::new("Start").size(16.0)))
+                            .on_hover_text("can't wait to start")
                             .clicked();
 
                         if start_resp {
                             /********** 用于调试 ************/
                             self.game_init(ctx, ui);
                             self.ui_state.nav = state::Nav::Game;
+                        }
+
+                        if  self.game_state.challenge {
+                            ui.label(egui::RichText::new("Time is not unlimited").size(12.0).color(egui::Color32::from_rgb(178, 102, 255)));
                         }
                         //ui.spacing_mut().item_spacing = egui::Vec2::new(20.0, 20.0);
 
