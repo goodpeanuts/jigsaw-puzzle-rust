@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-07 10:31:27
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:20:04
+ * @LastEditTime: 2023-11-09 01:25:40
  * @FilePath: \puzzle\src\view_gameside.rs
  * @Description:
  *
@@ -11,10 +11,7 @@
 
 use crate::game::GameApp;
 use crate::state;
-use eframe::{
-    egui::{self, Button},
-    epaint::vec2,
-};
+use eframe::egui;
 use std::sync::Mutex;
 
 // 这里的 SHOW_ORIGIN_IMAGE 如果设置在 GameApp 中，调用self.show_origin_image函数时会造成对变量的多次可变引用

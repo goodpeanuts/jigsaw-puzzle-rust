@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 00:35:47
+ * @LastEditTime: 2023-11-09 01:25:23
  * @FilePath: \puzzle\src\state.rs
  * @Description:
  *
@@ -54,7 +54,7 @@ pub struct GameState {
 
 impl GameState {
     pub fn new() -> Self {
-        let mut gamestate = GameState {
+        let gamestate = GameState {
             init: true,
             win: false,
             end: false,

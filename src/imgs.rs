@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 21:18:49
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-08 20:35:25
+ * @LastEditTime: 2023-11-09 01:25:13
  * @FilePath: \puzzle\src\imgs.rs
  * @Description: 
  * 
@@ -12,7 +12,7 @@
 // use image;
 // use image::{DynamicImage, GenericImageView};
 
-pub const IMAGE_background: &'static [u8] = include_bytes!("../assets/img/bg.jpg");
+//pub const IMAGE_background: &'static [u8] = include_bytes!("../assets/img/bg.jpg");
 pub const IMAGE_1: &'static [u8] = include_bytes!("../assets/img/1.png");
 pub const IMAGE_2: &'static [u8] = include_bytes!("../assets/img/2.png");
 pub const IMAGE_3: &'static [u8] = include_bytes!("../assets/img/3.png");
@@ -26,7 +26,7 @@ pub const IMAGE_10: &'static [u8] = include_bytes!("../assets/img/10.png");
 pub const IMAGE_11: &'static [u8] = include_bytes!("../assets/img/11.png");
 pub const IMAGE_12: &'static [u8] = include_bytes!("../assets/img/12.png");
 
-pub const IMAGE_URI_background: &'static str = "bytes://background";
+//pub const IMAGE_URI_background: &'static str = "bytes://background";
 pub const IMAGE_URI_1: &'static str = "bytes://x1";
 pub const IMAGE_URI_2: &'static str = "bytes://x2";
 pub const IMAGE_URI_3: &'static str = "bytes://x3";

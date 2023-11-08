@@ -2,18 +2,17 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:23:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:09:17
+ * @LastEditTime: 2023-11-09 01:36:21
  * @FilePath: \puzzle\src\view_home.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-use crate::custom_widget::{self, toggle, toggle_ui};
+use crate::custom_widget::toggle;
 use crate::game::GameApp;
 use crate::{imgs, state};
 use eframe::{
-    egui::{self, Button},
-    epaint::vec2,
+    egui::{self, Button}
 };
 
 impl GameApp {
@@ -53,7 +52,7 @@ impl GameApp {
                             ui.add(toggle(&mut self.game_state.challenge))
                         });
 
-                        ui.visuals_mut().widgets.inactive.weak_bg_fill = egui::Color32::from_rgb(70,70, 70);
+
                         if self.game_state.challenge {
                             ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(178, 102, 255);
                         } else {

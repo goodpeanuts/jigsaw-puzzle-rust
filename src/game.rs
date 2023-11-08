@@ -2,23 +2,20 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 00:24:22
+ * @LastEditTime: 2023-11-09 01:24:11
  * @FilePath: \puzzle\src\game.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 use chrono;
-use eframe::{
-    egui::{self, Button},
-    epaint::vec2,
-};
+use eframe::egui;
 use image::GenericImageView;
 use rand::prelude::SliceRandom;
 use std::io::Cursor;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
-use crate::{config, imgs, state, view_playground};
+use crate::{imgs, state, view_playground};
 
 pub struct GameApp {
     pub ui_state: state::UiState,
@@ -268,7 +265,7 @@ impl GameApp {
     }
 
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
-        config::custom_font(cc);
+        //config::custom_font(cc);
         GameApp {
             game_state: state::GameState::new(),
             ui_state: state::UiState {
