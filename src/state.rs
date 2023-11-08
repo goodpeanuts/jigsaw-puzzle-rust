@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-07 08:51:44
+ * @LastEditTime: 2023-11-09 00:35:47
  * @FilePath: \puzzle\src\state.rs
  * @Description:
  *
@@ -21,10 +21,10 @@ pub struct Piece {
 }
 
 impl Piece {
-    pub fn new(id: u32) -> Self {
+    pub fn new(id: u32, offset: u32) -> Self {
         Self {
             id,
-            uri: format!("bytes://{}", id),
+            uri: format!("bytes://{}", id + offset),
         }
     }
 }
@@ -45,7 +45,11 @@ pub struct GameState {
     pub custom: bool,
     pub custom_str: String,
     pub bot: bool,
-    pub step_time: time::Instant,
+    pub step_time: time::Instant, // 用于计算每一步走的时间
+    pub recovery: Vec<u32>,
+
+    // !
+    pub index_offset: u32,
 }
 
 impl GameState {
@@ -67,17 +71,24 @@ impl GameState {
             custom_str: String::new(),
             bot: false,
             step_time: time::Instant::now(),
+            recovery: Vec::new(),
+
+            // !
+            index_offset: 0,
         };
         gamestate
     }
 
     pub fn create_pieces_index (&mut self) {
         for i in 0..self.count * self.count {
-            self.pieces.push(Piece::new(i));
+            self.pieces.push(Piece::new(i, self.index_offset));
         }
     }
 
     pub fn reset_game_state(&mut self) {
+        // !
+        self.index_offset += self.count * self.count;
+        
         self.init = true;
         self.win = false;
         self.end = false;
@@ -94,6 +105,7 @@ impl GameState {
         self.custom_str = String::new();
         self.bot = false;
         self.step_time = time::Instant::now();
+        self.recovery.clear();
     }
 }
 

@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:15:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-08 00:22:03
+ * @LastEditTime: 2023-11-08 23:55:38
  * @FilePath: \puzzle\src\view_playground.rs
  * @Description:
  *
@@ -56,6 +56,8 @@ impl GameApp {
         self.game_state.start = std::time::Instant::now();
         /********** 用于调试 ************/
         print!("2 set game_state.start success\n");
+        // 获取还原碎片的遍历数组
+        self.get_recovery();
         self.shuffle_pieces();
         /********** 用于调试 ************/
         print!("3 shuffle_pieces success\n");
@@ -70,7 +72,7 @@ impl GameApp {
         print!("5 init success\n");
 
         /********** 用于调试 ************/
-        print!("init flase\n");
+        print!("init set flase\n");
         self.game_state.init = false;
     }
 
@@ -107,8 +109,18 @@ impl GameApp {
             egui::pos2(offset - gap, offset - gap), // 减去边缘的偏移量
             egui::pos2(offset + total_size + gap, offset + total_size + gap), // 加上边缘的偏移量
         );
-        ui.painter()
-            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::WHITE));
+
+        if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() < 21.0 {
+            ui.painter()
+            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_RED));
+        } else if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() >= 21.0{
+            ui.painter()
+            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::from_rgb(178, 102, 255)));
+        } else {
+            ui.painter()
+            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_BLUE));
+        }
+        
         // --------------- diaplay image
         for i in 0..self.game_state.count {
             ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 1.0);

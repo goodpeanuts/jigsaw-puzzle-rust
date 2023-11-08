@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-07 10:28:56
+ * @LastEditTime: 2023-11-08 20:36:17
  * @FilePath: \puzzle\src\main.rs
  * @Description: 
  * 
@@ -42,6 +42,7 @@ fn main() -> Result<(), eframe::Error>{
 
 pub fn setup(cc: &egui::Context) {
     egui_extras::install_image_loaders(cc);
+    cc.include_bytes(format!("bytes://background"), imgs::IMAGE_background);
     cc.include_bytes(format!("bytes://x{}", 1), imgs::IMAGE_1);
     cc.include_bytes(format!("bytes://x{}", 2), imgs::IMAGE_2);
     cc.include_bytes(format!("bytes://x{}", 3), imgs::IMAGE_3);
