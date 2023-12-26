@@ -196,7 +196,7 @@ impl GameApp {
     }
 
     fn congratulation(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, is_open: &mut bool) {
-        egui::Window::new("💕Congratulations")
+        egui::Window::new("💕恭喜")
             .title_bar(true)
             .fixed_pos(egui::pos2(0.0, 0.0))
             .open(is_open)
@@ -206,7 +206,7 @@ impl GameApp {
             .default_size(egui::vec2(900.0, 900.0))
             .show(ctx, |ui| {
                 ui.vertical_centered_justified(|ui| {
-                    ui.label(egui::RichText::new("YOU MADE IT！").size(20.0));
+                    ui.label(egui::RichText::new("你太厉害了！").size(20.0));
                     ui.add_sized(
                         [800.0, 800.0],
                         egui::Image::from_uri(self.img.get_byte_uri()),
@@ -214,8 +214,8 @@ impl GameApp {
                 });
 
                 let restart_resp = ui
-                    .add_sized([100.0, 30.0], Button::new("Again"))
-                    .on_hover_text("Back to menu")
+                    .add_sized([100.0, 30.0], Button::new("再玩一次"))
+                    .on_hover_text("返回菜单")
                     .clicked();
 
                 if restart_resp {

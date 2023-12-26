@@ -29,7 +29,7 @@ fn set_show_origin_image(value: bool) {
 
 impl GameApp {
     fn show_origin_image(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, is_open: &mut bool) {
-        egui::Window::new("Original image")
+        egui::Window::new("原图")
             .title_bar(true)
             .open(is_open)
             .default_open(true)
@@ -61,16 +61,16 @@ impl GameApp {
                     ui.add_space(50.0);
                     match self.game_state.count {
                         3 => {
-                            ui.label(egui::RichText::new("✨Easy").size(25.0));
+                            ui.label(egui::RichText::new("✨简单").size(25.0));
                         }
                         5 => {
-                            ui.label(egui::RichText::new("🔥Normal").size(25.0));
+                            ui.label(egui::RichText::new("🔥正常").size(25.0));
                         }
                         8 => {
-                            ui.label(egui::RichText::new("💀Difficult").size(25.0));
+                            ui.label(egui::RichText::new("💀 困难").size(25.0));
                         }
                         _ => {
-                            ui.label(egui::RichText::new("🔧Custom").size(25.0));
+                            ui.label(egui::RichText::new("🔧 自定义").size(25.0));
                         }
                     }
                     ui.add_space(50.0);
@@ -84,7 +84,7 @@ impl GameApp {
                         [120.0, 40.0],
                         egui::SelectableLabel::new(
                             self.game_state.bot,
-                            egui::RichText::new("🎱 Bot").size(21.0),
+                            egui::RichText::new("🎱 机器人").size(21.0),
                         ),
                     );
 
@@ -107,7 +107,7 @@ impl GameApp {
                     // 这里重开一个ui，不然按钮的长度会因为justified被强制拉长至和layout一样长
                     ui.vertical_centered(|ui| {
                         let show_imgea_resp = ui
-                            .add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Original").size(17.0)))
+                            .add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("查看原图").size(17.0)))
                             .on_hover_ui(|ui| {
                                 ui.add_sized(
                                     [200.0, 200.0],
@@ -135,7 +135,7 @@ impl GameApp {
 
                         ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::RED;
                         let return_resp =
-                            ui.add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Exit").size(17.0)));
+                            ui.add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("退出").size(17.0)));
 
                         if return_resp.clicked() {
                             self.ui_state.nav = state::Nav::Home;
@@ -190,8 +190,8 @@ impl GameApp {
                         if self.game_state.end && !self.game_state.win {
                             //ui.is_visible();
                             ui.add_sized(
-                                [80.0, 19.0],
-                                egui::Label::new("You shall be better next time"),
+                                [120.0, 30.0],
+                                egui::Label::new("😭 失败")
                             );
                         }
                     });

@@ -14,6 +14,7 @@ use image::GenericImageView;
 use rand::prelude::SliceRandom;
 use std::io::Cursor;
 use std::time::Instant;
+use crate::config;
 
 use crate::{imgs, state, view_playground};
 
@@ -265,7 +266,7 @@ impl GameApp {
     }
 
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
-        //config::custom_font(cc);
+        config::custom_font(cc);
         GameApp {
             game_state: state::GameState::new(),
             ui_state: state::UiState {

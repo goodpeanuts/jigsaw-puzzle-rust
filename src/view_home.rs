@@ -28,16 +28,16 @@ impl GameApp {
                 ui.add_space(20.0);
                 ui.vertical_centered(|ui| {
 
-                    // ui.label(egui::RichText::new("Jigsaw Puzzle").size(32.0).color(egui::Color32::LIGHT_GRAY));
+                    // ui.label(egui::RichText::new("拼图游戏").size(32.0).color(egui::Color32::LIGHT_GRAY));
 
                     if self.game_state.count < 5 {
-                        ui.label(egui::RichText::new("✨ Jigsaw Puzzle").size(32.0));
+                        ui.label(egui::RichText::new("✨ 拼图游戏").size(32.0));
                     } else if self.game_state.count < 8 {
-                        ui.label(egui::RichText::new("🔥 Jigsaw Puzzle").size(32.0));
+                        ui.label(egui::RichText::new("🔥 拼图游戏").size(32.0));
                     } else if self.game_state.count < 12 {
-                        ui.label(egui::RichText::new("💀 Jigsaw Puzzle").size(32.0));
+                        ui.label(egui::RichText::new("💀 拼图游戏").size(32.0));
                     } else {
-                        ui.label(egui::RichText::new("🎉 Jigsaw Puzzle").size(32.0));
+                        ui.label(egui::RichText::new("🎉 拼图游戏").size(32.0));
                     }
 
                     ui.add_space(80.0);
@@ -48,7 +48,7 @@ impl GameApp {
                     |ui| {
                         ui.horizontal(|ui| {
                             //ui.add_space(450.0);
-                            ui.add_sized([60.0, 60.0], egui::Label::new("Challenge"));
+                            ui.add_sized([60.0, 60.0], egui::Label::new("挑战模式"));
                             ui.add(toggle(&mut self.game_state.challenge))
                         });
 
@@ -59,8 +59,8 @@ impl GameApp {
                             ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(0,204, 0);
                         }
                         let start_resp = ui
-                            .add_sized([130.0, 45.0], Button::new(egui::RichText::new("Start").size(16.0)))
-                            .on_hover_text("can't wait to start")
+                            .add_sized([130.0, 45.0], Button::new(egui::RichText::new("开始").size(16.0)))
+                            .on_hover_text("等不及了")
                             .clicked();
 
                         if start_resp {
@@ -70,7 +70,7 @@ impl GameApp {
                         }
 
                         if  self.game_state.challenge {
-                            ui.label(egui::RichText::new("Time is not unlimited").size(12.0).color(egui::Color32::from_rgb(178, 102, 255)));
+                            ui.label(egui::RichText::new("时间有限").size(12.0).color(egui::Color32::from_rgb(178, 102, 255)));
                         }
                         //ui.spacing_mut().item_spacing = egui::Vec2::new(20.0, 20.0);
 
@@ -94,7 +94,7 @@ impl GameApp {
                                     egui::SelectableLabel::new(
                                         self.game_state.count == 3
                                             && self.game_state.custom == false,
-                                        egui::RichText::new("easy").size(15.0),
+                                        egui::RichText::new("简单").size(15.0),
                                     ),
                                 )
                                 .clicked()
@@ -111,7 +111,7 @@ impl GameApp {
                                     egui::SelectableLabel::new(
                                         self.game_state.count == 5
                                             && self.game_state.custom == false,
-                                        egui::RichText::new("normal").size(15.0),
+                                        egui::RichText::new("正常").size(15.0),
                                     ),
                                 )
                                 .clicked()
@@ -128,7 +128,7 @@ impl GameApp {
                                     egui::SelectableLabel::new(
                                         self.game_state.count == 8
                                             && self.game_state.custom == false,
-                                        egui::RichText::new("difficult").size(15.0),
+                                        egui::RichText::new("困难").size(15.0),
                                     ),
                                 )
                                 .clicked()
@@ -144,7 +144,7 @@ impl GameApp {
                                     [80.0, 19.0],
                                     egui::SelectableLabel::new(
                                         self.game_state.custom == true,
-                                        egui::RichText::new("custom").size(15.0),
+                                        egui::RichText::new("自定义").size(15.0),
                                     ),
                                 )
                                 .clicked()
@@ -216,14 +216,14 @@ impl GameApp {
                     egui::Rect::from_min_max(egui::pos2(930.0, 280.0), egui::pos2(990.0, 350.0)),
                     |ui| {
                         ui.horizontal_centered(|ui| {
-                            egui::ComboBox::from_label("Select an image")
+                            egui::ComboBox::from_label("选择图片")
                                 .selected_text(format!("{:?}", self.img.show_name()))
                                 .width(120.0)
                                 .show_ui(ui, |ui| {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image1,
-                                        "First",
+                                        "0x01",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -234,7 +234,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image2,
-                                        "Second",
+                                        "0x02",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -245,7 +245,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image3,
-                                        "Third",
+                                        "0x03",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -256,7 +256,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image4,
-                                        "Fourth",
+                                        "0x04",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -267,7 +267,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image5,
-                                        "Fifth",
+                                        "0x05",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -278,7 +278,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image6,
-                                        "Sixth",
+                                        "0x06",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -289,7 +289,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image7,
-                                        "Seventh",
+                                        "0x07",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -300,7 +300,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image8,
-                                        "Eighth",
+                                        "0x08",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -311,7 +311,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image9,
-                                        "Ninth",
+                                        "0x09",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -322,7 +322,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image10,
-                                        "Tenth",
+                                        "0x0a",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -333,7 +333,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image11,
-                                        "Eleventh",
+                                        "0x0b",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
@@ -344,7 +344,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image12,
-                                        "Twelfth",
+                                        "0x0c",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
