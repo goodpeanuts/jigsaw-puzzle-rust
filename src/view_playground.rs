@@ -31,6 +31,9 @@ pub fn set_show_congrulation(value: bool) {
 impl GameApp {
     // 对局开始初始化，设置碎片个数并打乱，设置计时模式
     pub fn game_init(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
+        if self.game_state.count <= 1 {
+            self.game_state.count = 2;
+        }
         // 如果是挑战模式，设置时间限制
         if self.game_state.challenge {
             match self.game_state.count {

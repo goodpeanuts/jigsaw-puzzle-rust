@@ -31,7 +31,7 @@ fn main() -> Result<(), eframe::Error>{
     //     }))),
     // )
     eframe::run_native(
-        "WHO IS GOODPEANUTS",
+        "拼图游戏",
         options,
         Box::new(|cc| {
             setup(&cc.egui_ctx);

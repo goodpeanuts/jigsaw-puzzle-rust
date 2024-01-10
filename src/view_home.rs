@@ -344,7 +344,7 @@ impl GameApp {
                                     ui.selectable_value(
                                         &mut self.img,
                                         imgs::ImageChoice::Image12,
-                                        "0x0c",
+                                        "打开图片",
                                     )
                                     .on_hover_ui(|ui| {
                                         ui.add_sized(
