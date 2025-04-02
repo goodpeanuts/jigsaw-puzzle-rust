@@ -5,13 +5,13 @@
  * @LastEditTime: 2023-11-03 18:56:27
  * @FilePath: \puzzle\src\config.rs
  * @Description: help display chinese characters in egui
- * 
- * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
+ *
+ * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 
 use eframe::egui;
 
-pub fn custom_font(cc: &eframe::CreationContext<'_>){
+pub fn custom_font(cc: &eframe::CreationContext<'_>) {
     // Start with the default fonts (we will be adding to them rather than replacing them).
     let mut fonts = egui::FontDefinitions::default();
 
@@ -19,9 +19,7 @@ pub fn custom_font(cc: &eframe::CreationContext<'_>){
     // .ttf and .otf files supported.
     fonts.font_data.insert(
         "OPPOSans-L".to_owned(),
-        egui::FontData::from_static(include_bytes!(
-            "../assets/fonts/YaiHe.ttf"
-        )),
+        egui::FontData::from_static(include_bytes!("../assets/fonts/YaiHe.ttf")),
     );
 
     // Put my font first (highest priority) for proportional text:

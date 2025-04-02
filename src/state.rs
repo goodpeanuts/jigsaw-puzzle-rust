@@ -42,7 +42,7 @@ pub struct GameState {
     pub duration: f64,
     pub limit: f64,
     pub rest: f64,
-    pub custom: bool,
+    pub is_custom: bool,
     pub custom_str: String,
     pub bot: bool,
     pub step_time: time::Instant, // 用于计算每一步走的时间
@@ -52,9 +52,15 @@ pub struct GameState {
     pub index_offset: u32,
 }
 
+impl Default for GameState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GameState {
     pub fn new() -> Self {
-        let gamestate = GameState {
+        GameState {
             init: true,
             win: false,
             end: false,
@@ -67,7 +73,7 @@ impl GameState {
             duration: 0.0,
             limit: 300.0,
             rest: 300.0,
-            custom: false,
+            is_custom: false,
             custom_str: String::new(),
             bot: false,
             step_time: time::Instant::now(),
@@ -75,11 +81,10 @@ impl GameState {
 
             // !
             index_offset: 0,
-        };
-        gamestate
+        }
     }
 
-    pub fn create_pieces_index (&mut self) {
+    pub fn create_pieces_index(&mut self) {
         for i in 0..self.count * self.count {
             self.pieces.push(Piece::new(i, self.index_offset));
         }
@@ -88,7 +93,7 @@ impl GameState {
     pub fn reset_game_state(&mut self) {
         // !
         self.index_offset += self.count * self.count;
-        
+
         self.init = true;
         self.win = false;
         self.end = false;
@@ -101,7 +106,7 @@ impl GameState {
         self.duration = 0.0;
         self.limit = 300.0;
         self.rest = 300.0;
-        self.custom = false;
+        self.is_custom = false;
         self.custom_str = String::new();
         self.bot = false;
         self.step_time = time::Instant::now();

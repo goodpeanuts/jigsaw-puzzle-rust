@@ -25,8 +25,8 @@ pub struct GameApp {
 
 impl GameApp {
     // 将Vec<u8>转换为&'static [u8], 确保其拼图碎片拥有和程序一样长的生命周期
-    fn get_static_u8(bytes: &Vec<u8>) -> &'static [u8] {
-        let x = bytes.clone().into_boxed_slice();
+    fn get_static_u8(bytes: &[u8]) -> &'static [u8] {
+        let x = bytes.to_owned().into_boxed_slice();
         let static_ref = Box::leak(x);
         &static_ref[..]
     }
@@ -36,13 +36,12 @@ impl GameApp {
         let mut img = image::load_from_memory(imgs::ImageChoice::chose_pic(&self.img))
             .expect("Failed to load image");
         let (width, height) = img.dimensions();
-        let sub_width = width / self.game_state.count as u32;
-        let sub_height = height / self.game_state.count as u32; 
+        let sub_width = width / self.game_state.count;
+        let sub_height = height / self.game_state.count;
         for i in 0..self.game_state.count {
             for j in 0..self.game_state.count {
-                let x = sub_width * j as u32;
-                let y = sub_height * i as u32;
-                //print!("{}", i * self.game_state.count + j);
+                let x = sub_width * j;
+                let y = sub_height * i;
                 // 从原图中裁剪出子图
                 let sub_image = img.crop(x, y, sub_width, sub_height);
 
@@ -56,7 +55,10 @@ impl GameApp {
                 // 将缓存中的图片写入到egui的缓存中
                 cc.include_bytes(
                     // !
-                    format!("bytes://{}", self.game_state.index_offset + i * self.game_state.count + j),
+                    format!(
+                        "bytes://{}",
+                        self.game_state.index_offset + i * self.game_state.count + j
+                    ),
                     GameApp::get_static_u8(&bytes),
                 );
             }
@@ -73,9 +75,9 @@ impl GameApp {
 
     pub fn exchange_piece(&mut self) {
         if self.game_state.exchange.len() == 2 {
-            /********** 用于调试 ************/
-            print!(
-                "[{:>2} - {:>2}]  exchanged\n",
+            #[cfg(feature = "debug")]
+            println!(
+                "[{:>2} - {:>2}]  exchanged",
                 self.game_state.exchange[0], self.game_state.exchange[1]
             );
             self.game_state.pos.swap(
@@ -89,7 +91,12 @@ impl GameApp {
 
     pub fn get_recovery(&mut self) {
         let mut index = 0;
-        self.game_state.recovery = vec![0; (self.game_state.count * self.game_state.count).try_into().unwrap()];
+        self.game_state.recovery = vec![
+            0;
+            (self.game_state.count * self.game_state.count)
+                .try_into()
+                .unwrap()
+        ];
         for layer in 0..(self.game_state.count + 1) / 2 {
             let start = layer;
             let end = self.game_state.count - layer;
@@ -99,43 +106,44 @@ impl GameApp {
                 index += 1;
             }
             // Traverse down
-            for i in start+1..end {
+            for i in start + 1..end {
                 self.game_state.recovery[index] = i * self.game_state.count + end - 1;
                 index += 1;
             }
             // Traverse left
-            for i in (start..end-1).rev() {
+            for i in (start..end - 1).rev() {
                 self.game_state.recovery[index] = (end - 1) * self.game_state.count + i;
                 index += 1;
             }
             // Traverse up
-            for i in (start+1..end-1).rev() {
+            for i in (start + 1..end - 1).rev() {
                 self.game_state.recovery[index] = i * self.game_state.count + start;
                 index += 1;
             }
         }
         // 将vector中的元素反转
         self.game_state.recovery.reverse();
-        /********** 用于调试 ************/
-        print!("\n");
-        for i in 0..self.game_state.count * self.game_state.count {
-            print!("{} ", self.game_state.recovery[i as usize]);
-            if (i + 1) % self.game_state.count == 0  {
-                print!("\n");
+
+        #[cfg(feature = "debug")]
+        {
+            println!("");
+            for i in 0..self.game_state.count * self.game_state.count {
+                print!("{} ", self.game_state.recovery[i as usize]);
+                if (i + 1) % self.game_state.count == 0 {
+                    println!("");
+                }
             }
+            println!("");
         }
-        print!("\n");
     }
 
     // 机器人操作复原
     pub fn recover(&mut self) {
-
         //控制复原速度
         let gap = self.game_state.step_time.elapsed().as_secs_f64();
         match gap > 0.05 {
             true => {
                 self.game_state.step_time = Instant::now();
-                
             }
             false => {
                 return;
@@ -154,7 +162,6 @@ impl GameApp {
         //         }
         //     }
         // }
-        
 
         // 第二种恢复，简单醋泡
         // for i in 0..pos_len {
@@ -171,7 +178,7 @@ impl GameApp {
         //     let j = (i + pos_len / 3) % pos_len;
         //     if self.game_state.pos[j as usize] != j {
         //         self.game_state.exchange.push(j);
-                
+
         //         let j_pos = self.game_state.pos.iter().position(|&r| r == j).unwrap() as u32;
 
         //         self.game_state.exchange.push(j_pos);
@@ -185,7 +192,7 @@ impl GameApp {
             let j = self.game_state.recovery[i as usize];
             if self.game_state.pos[j as usize] != j {
                 self.game_state.exchange.push(j);
-                
+
                 let j_pos = self.game_state.pos.iter().position(|&r| r == j).unwrap() as u32;
 
                 self.game_state.exchange.push(j_pos);
@@ -193,9 +200,7 @@ impl GameApp {
                 return;
             }
         }
-
     }
-    
 
     // 计算返回游戏进行时长
     pub fn get_elasp_time_str(&mut self) -> String {
@@ -215,7 +220,7 @@ impl GameApp {
 
     // 计算返回游戏剩余时间
     pub fn get_rest_time_str(&mut self) -> String {
-        if !self.game_state.win && !self.game_state.end && self.game_state.challenge{
+        if !self.game_state.win && !self.game_state.end && self.game_state.challenge {
             self.game_state.rest =
                 self.game_state.limit - self.game_state.start.elapsed().as_secs_f64();
         }
@@ -242,8 +247,7 @@ impl GameApp {
 
     // 计算其他情况下的挑战模式限制
     pub fn calculate_time_limit(&mut self, x: f64) -> f64 {
-        let result = 18.5 * x * x - 110.5 * x + 180.0;
-        result
+        18.5 * x * x - 110.5 * x + 180.0
     }
 
     // 用于检查是否完成拼图，在每次交换碎片后被调用
@@ -259,12 +263,12 @@ impl GameApp {
             self.game_state.win = true;
             self.game_state.end = true;
             view_playground::set_show_congrulation(true);
-            /********** 用于调试 ************/
+            #[cfg(feature = "debug")]
             println!("You win!");
         }
     }
 
-    pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
+    pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
         //config::custom_font(cc);
         GameApp {
             game_state: state::GameState::new(),
@@ -277,7 +281,7 @@ impl GameApp {
 }
 
 impl eframe::App for GameApp {
-    fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| match self.ui_state.nav {
             state::Nav::Home => {
                 self.home(ctx, ui);

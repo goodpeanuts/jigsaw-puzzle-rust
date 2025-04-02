@@ -4,30 +4,30 @@
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
  * @LastEditTime: 2023-11-09 01:28:10
  * @FilePath: \puzzle\src\main.rs
- * @Description: 
- * 
- * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 // ./src/main.rs
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use puzzle::game;
 use eframe::egui;
+use puzzle::game;
 
 use puzzle::imgs;
 
-fn main() -> Result<(), eframe::Error>{
+fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
         initial_window_size: Some(egui::vec2(1200.0, 900.0)), // 设置窗口的宽度和高度
-        resizable: false, // 设置窗口是否可以调整大小
+        resizable: false,                                     // 设置窗口是否可以调整大小
         hardware_acceleration: eframe::HardwareAcceleration::Required, // 设置是否使用硬件加速
-        ..Default::default() // 使用其他默认选项
+        ..Default::default()                                  // 使用其他默认选项
     };
     // eframe::run_native(
     //     "puzzle",
     //     eframe::NativeOptions::default(),
     //     Box::new(|cc| Box::new(game::GameApp::new(|c|{
-            
+
     //     }))),
     // )
     eframe::run_native(

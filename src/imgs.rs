@@ -4,42 +4,41 @@
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
  * @LastEditTime: 2023-11-09 01:25:13
  * @FilePath: \puzzle\src\imgs.rs
- * @Description: 
- * 
- * Copyright (c) 2023 by goodpeanuts, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 // use eframe::egui;
 // use image;
 // use image::{DynamicImage, GenericImageView};
 
 //pub const IMAGE_background: &'static [u8] = include_bytes!("../assets/img/bg.jpg");
-pub const IMAGE_1: &'static [u8] = include_bytes!("../assets/img/1.png");
-pub const IMAGE_2: &'static [u8] = include_bytes!("../assets/img/2.png");
-pub const IMAGE_3: &'static [u8] = include_bytes!("../assets/img/3.png");
-pub const IMAGE_4: &'static [u8] = include_bytes!("../assets/img/4.png");
-pub const IMAGE_5: &'static [u8] = include_bytes!("../assets/img/5.png");
-pub const IMAGE_6: &'static [u8] = include_bytes!("../assets/img/6.png");
-pub const IMAGE_7: &'static [u8] = include_bytes!("../assets/img/7.png");
-pub const IMAGE_8: &'static [u8] = include_bytes!("../assets/img/8.jpg");
-pub const IMAGE_9: &'static [u8] = include_bytes!("../assets/img/9.png");
-pub const IMAGE_10: &'static [u8] = include_bytes!("../assets/img/10.png");
-pub const IMAGE_11: &'static [u8] = include_bytes!("../assets/img/11.png");
-pub const IMAGE_12: &'static [u8] = include_bytes!("../assets/img/12.png");
+pub const IMAGE_1: &[u8] = include_bytes!("../assets/img/1.png");
+pub const IMAGE_2: &[u8] = include_bytes!("../assets/img/2.png");
+pub const IMAGE_3: &[u8] = include_bytes!("../assets/img/3.png");
+pub const IMAGE_4: &[u8] = include_bytes!("../assets/img/4.png");
+pub const IMAGE_5: &[u8] = include_bytes!("../assets/img/5.png");
+pub const IMAGE_6: &[u8] = include_bytes!("../assets/img/6.png");
+pub const IMAGE_7: &[u8] = include_bytes!("../assets/img/7.png");
+pub const IMAGE_8: &[u8] = include_bytes!("../assets/img/8.jpg");
+pub const IMAGE_9: &[u8] = include_bytes!("../assets/img/9.png");
+pub const IMAGE_10: &[u8] = include_bytes!("../assets/img/10.png");
+pub const IMAGE_11: &[u8] = include_bytes!("../assets/img/11.png");
+pub const IMAGE_12: &[u8] = include_bytes!("../assets/img/12.png");
 
 //pub const IMAGE_URI_background: &'static str = "bytes://background";
-pub const IMAGE_URI_1: &'static str = "bytes://x1";
-pub const IMAGE_URI_2: &'static str = "bytes://x2";
-pub const IMAGE_URI_3: &'static str = "bytes://x3";
-pub const IMAGE_URI_4: &'static str = "bytes://x4";
-pub const IMAGE_URI_5: &'static str = "bytes://x5";
-pub const IMAGE_URI_6: &'static str = "bytes://x6";
-pub const IMAGE_URI_7: &'static str = "bytes://x7";
-pub const IMAGE_URI_8: &'static str = "bytes://x8";
-pub const IMAGE_URI_9: &'static str = "bytes://x9";
-pub const IMAGE_URI_10: &'static str = "bytes://x10";
-pub const IMAGE_URI_11: &'static str = "bytes://x11";
-pub const IMAGE_URI_12: &'static str = "bytes://x12";
-
+pub const IMAGE_URI_1: &str = "bytes://x1";
+pub const IMAGE_URI_2: &str = "bytes://x2";
+pub const IMAGE_URI_3: &str = "bytes://x3";
+pub const IMAGE_URI_4: &str = "bytes://x4";
+pub const IMAGE_URI_5: &str = "bytes://x5";
+pub const IMAGE_URI_6: &str = "bytes://x6";
+pub const IMAGE_URI_7: &str = "bytes://x7";
+pub const IMAGE_URI_8: &str = "bytes://x8";
+pub const IMAGE_URI_9: &str = "bytes://x9";
+pub const IMAGE_URI_10: &str = "bytes://x10";
+pub const IMAGE_URI_11: &str = "bytes://x11";
+pub const IMAGE_URI_12: &str = "bytes://x12";
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum ImageChoice {
@@ -54,7 +53,7 @@ pub enum ImageChoice {
     Image9,
     Image10,
     Image11,
-    Image12, 
+    Image12,
 }
 
 impl ImageChoice {

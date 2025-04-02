@@ -28,7 +28,7 @@ fn set_show_origin_image(value: bool) {
 }
 
 impl GameApp {
-    fn show_origin_image(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, is_open: &mut bool) {
+    fn show_origin_image(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui, is_open: &mut bool) {
         egui::Window::new("Original image")
             .title_bar(true)
             .open(is_open)
@@ -54,7 +54,6 @@ impl GameApp {
                 ui.available_size(),
                 egui::Layout::top_down(egui::Align::Center),
                 |ui| {
-                    /********** 用于调试 ************/
                     // 画一个黄色填充的正方形
                     // ui.painter().rect_filled(game_side_rect, 0.0, egui::Color32::from_rgb(255, 255, 0));
                     // ui.spacing_mut().item_spacing = egui::Vec2::new(20.0, 20.0);
@@ -74,7 +73,6 @@ impl GameApp {
                         }
                     }
                     ui.add_space(50.0);
-                    
 
                     // ui.visuals_mut().widgets.inactive.weak_bg_fill = egui::Color32::from_rgb(51,0,105);
                     // ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(96,96,96);
@@ -97,7 +95,11 @@ impl GameApp {
 
                     if self.game_state.bot {
                         ui.add_space(5.0);
-                        ui.label(egui::RichText::new("🎉 Magic show").size(16.0).color(egui::Color32::GOLD));
+                        ui.label(
+                            egui::RichText::new("🎉 Magic show")
+                                .size(16.0)
+                                .color(egui::Color32::GOLD),
+                        );
                     }
 
                     ui.add_space(50.0);
@@ -107,7 +109,10 @@ impl GameApp {
                     // 这里重开一个ui，不然按钮的长度会因为justified被强制拉长至和layout一样长
                     ui.vertical_centered(|ui| {
                         let show_imgea_resp = ui
-                            .add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Original").size(17.0)))
+                            .add_sized(
+                                [120.0, 40.0],
+                                egui::Button::new(egui::RichText::new("Original").size(17.0)),
+                            )
                             .on_hover_ui(|ui| {
                                 ui.add_sized(
                                     [200.0, 200.0],
@@ -116,7 +121,7 @@ impl GameApp {
                             });
 
                         if show_imgea_resp.clicked() {
-                            if *SHOW_ORIGIN_IMAGE.lock().unwrap(){
+                            if *SHOW_ORIGIN_IMAGE.lock().unwrap() {
                                 set_show_origin_image(false);
                             } else {
                                 set_show_origin_image(true);
@@ -124,28 +129,25 @@ impl GameApp {
                         }
 
                         if *SHOW_ORIGIN_IMAGE.lock().unwrap() {
-                            self.show_origin_image(
-                                ctx,
-                                ui,
-                                &mut *SHOW_ORIGIN_IMAGE.lock().unwrap(),
-                            );
+                            self.show_origin_image(ctx, ui, &mut SHOW_ORIGIN_IMAGE.lock().unwrap());
                         }
 
                         ui.add_space(50.0);
 
                         ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::RED;
-                        let return_resp =
-                            ui.add_sized([120.0, 40.0], egui::Button::new(egui::RichText::new("Exit").size(17.0)));
+                        let return_resp = ui.add_sized(
+                            [120.0, 40.0],
+                            egui::Button::new(egui::RichText::new("Exit").size(17.0)),
+                        );
 
                         if return_resp.clicked() {
                             self.ui_state.nav = state::Nav::Home;
                             self.game_state.reset_game_state();
                         }
 
-                        let mut time_dispaly = String::new();
-                        match self.game_state.challenge {
-                            true => time_dispaly = self.get_rest_time_str(),
-                            false => time_dispaly = self.get_elasp_time_str(),
+                        let time_dispaly = match self.game_state.challenge {
+                            true => self.get_rest_time_str(),
+                            false => self.get_elasp_time_str(),
                         };
 
                         // 根据时间长度调整字体大小
@@ -162,18 +164,16 @@ impl GameApp {
                             }
                         };
 
-                        // 根据剩余时间设置时间颜色
-                        let mut time_color = egui::Color32::LIGHT_BLUE;
-
                         // 挑战模式时时间为红色和绿色
-                        if self.game_state.challenge && self.game_state.rest < 21.0 {
-                            time_color = egui::Color32::LIGHT_RED;
+                        // 非挑战模式时时间为蓝色
+                        let time_color = if self.game_state.challenge && self.game_state.rest < 21.0
+                        {
+                            egui::Color32::LIGHT_RED
                         } else if self.game_state.challenge {
-                            time_color = egui::Color32::LIGHT_GREEN;
+                            egui::Color32::LIGHT_GREEN
                         } else {
-                            // 非挑战模式时时间为蓝色
-                            time_color = egui::Color32::LIGHT_BLUE;
-                        }
+                            egui::Color32::LIGHT_BLUE
+                        };
 
                         ui.add_space(30.0);
                         ui.label(
@@ -184,8 +184,6 @@ impl GameApp {
                         );
                         // 请求重绘保证时间连续变化
                         ui.ctx().request_repaint();
-
-                        
 
                         if self.game_state.end && !self.game_state.win {
                             //ui.is_visible();

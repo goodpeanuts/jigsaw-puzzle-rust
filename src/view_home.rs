@@ -11,9 +11,7 @@
 use crate::custom_widget::toggle;
 use crate::game::GameApp;
 use crate::{imgs, state};
-use eframe::{
-    egui::{self, Button}
-};
+use eframe::egui::{self, Button};
 
 impl GameApp {
     pub fn home(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
@@ -27,7 +25,6 @@ impl GameApp {
                 // ui.add_sized([25.0, 10.0], egui::widgets::Button::new("🔧"));
                 ui.add_space(20.0);
                 ui.vertical_centered(|ui| {
-
                     // ui.label(egui::RichText::new("Jigsaw Puzzle").size(32.0).color(egui::Color32::LIGHT_GRAY));
 
                     if self.game_state.count < 5 {
@@ -52,25 +49,32 @@ impl GameApp {
                             ui.add(toggle(&mut self.game_state.challenge))
                         });
 
-
                         if self.game_state.challenge {
-                            ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(178, 102, 255);
+                            ui.visuals_mut().widgets.hovered.weak_bg_fill =
+                                egui::Color32::from_rgb(178, 102, 255);
                         } else {
-                            ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(0,204, 0);
+                            ui.visuals_mut().widgets.hovered.weak_bg_fill =
+                                egui::Color32::from_rgb(0, 204, 0);
                         }
                         let start_resp = ui
-                            .add_sized([130.0, 45.0], Button::new(egui::RichText::new("Start").size(16.0)))
+                            .add_sized(
+                                [130.0, 45.0],
+                                Button::new(egui::RichText::new("Start").size(16.0)),
+                            )
                             .on_hover_text("can't wait to start")
                             .clicked();
 
                         if start_resp {
-                            /********** 用于调试 ************/
                             self.game_init(ctx, ui);
                             self.ui_state.nav = state::Nav::Game;
                         }
 
-                        if  self.game_state.challenge {
-                            ui.label(egui::RichText::new("Time is not unlimited").size(12.0).color(egui::Color32::from_rgb(178, 102, 255)));
+                        if self.game_state.challenge {
+                            ui.label(
+                                egui::RichText::new("Time is not unlimited")
+                                    .size(12.0)
+                                    .color(egui::Color32::from_rgb(178, 102, 255)),
+                            );
                         }
                         //ui.spacing_mut().item_spacing = egui::Vec2::new(20.0, 20.0);
 
@@ -86,21 +90,21 @@ impl GameApp {
                             ui.add_space(14.0);
 
                             //ui.visuals_mut().widgets.inactive.weak_bg_fill = egui::Color32::from_rgb(51,0,105);
-                            ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::from_rgb(96,96,96);
+                            ui.visuals_mut().widgets.hovered.weak_bg_fill =
+                                egui::Color32::from_rgb(96, 96, 96);
 
                             if ui
                                 .add_sized(
                                     [80.0, 19.0],
                                     egui::SelectableLabel::new(
-                                        self.game_state.count == 3
-                                            && self.game_state.custom == false,
+                                        self.game_state.count == 3 && self.game_state.is_custom,
                                         egui::RichText::new("easy").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
                                 self.game_state.count = 3;
-                                self.game_state.custom = false;
+                                self.game_state.is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -109,15 +113,14 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     egui::SelectableLabel::new(
-                                        self.game_state.count == 5
-                                            && self.game_state.custom == false,
+                                        self.game_state.count == 5 && self.game_state.is_custom,
                                         egui::RichText::new("normal").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
                                 self.game_state.count = 5;
-                                self.game_state.custom = false;
+                                self.game_state.is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -126,15 +129,14 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     egui::SelectableLabel::new(
-                                        self.game_state.count == 8
-                                            && self.game_state.custom == false,
+                                        self.game_state.count == 8 && self.game_state.is_custom,
                                         egui::RichText::new("difficult").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
                                 self.game_state.count = 8;
-                                self.game_state.custom = false;
+                                self.game_state.is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -143,24 +145,24 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     egui::SelectableLabel::new(
-                                        self.game_state.custom == true,
+                                        self.game_state.is_custom,
                                         egui::RichText::new("custom").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
-                                self.game_state.custom = true;
+                                self.game_state.is_custom = true;
                             }
 
                             // 自定义碎片数量
-                            if self.game_state.custom {
+                            if self.game_state.is_custom {
                                 ui.add_sized(
                                     [100.0, 60.0],
                                     egui::widgets::Slider::new(&mut self.game_state.count, 2..=12)
                                         .clamp_to_range(false)
                                         .text(""),
                                 );
-                                if self.game_state.custom
+                                if self.game_state.is_custom
                                     && self.game_state.count >= 13
                                     && self.game_state.count < 51
                                 {
@@ -169,7 +171,7 @@ impl GameApp {
                                             .size(14.0)
                                             .color(egui::Color32::LIGHT_GREEN),
                                     );
-                                } else if self.game_state.custom && self.game_state.count >= 51 {
+                                } else if self.game_state.is_custom && self.game_state.count >= 51 {
                                     ui.label(
                                         egui::RichText::new("Not Recommend")
                                             .size(14.0)

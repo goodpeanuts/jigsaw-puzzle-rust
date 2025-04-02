@@ -13,10 +13,8 @@ use eframe::{
     egui::{self, Button},
     epaint::vec2,
 };
-use std::io;
 
 use crate::state;
-use std::io::Write;
 use std::sync::Mutex;
 
 lazy_static::lazy_static! {
@@ -30,7 +28,7 @@ pub fn set_show_congrulation(value: bool) {
 
 impl GameApp {
     // 对局开始初始化，设置碎片个数并打乱，设置计时模式
-    pub fn game_init(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
+    pub fn game_init(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui) {
         // 如果是挑战模式，设置时间限制
         if self.game_state.challenge {
             match self.game_state.count {
@@ -51,28 +49,34 @@ impl GameApp {
                 }
             }
         }
-        /********** 用于调试 ************/
-        print!("1 set game_state.limit success\n");
+        #[cfg(feature = "debug")]
+        println!("1 set game_state.limit success");
+
         self.game_state.start = std::time::Instant::now();
-        /********** 用于调试 ************/
-        print!("2 set game_state.start success\n");
+
+        #[cfg(feature = "debug")]
+        println!("2 set game_state.start success");
+
         // 获取还原碎片的遍历数组
         self.get_recovery();
         self.shuffle_pieces();
-        /********** 用于调试 ************/
-        print!("3 shuffle_pieces success\n");
+
+        #[cfg(feature = "debug")]
+        println!("3 shuffle_pieces success");
         self.split_image(ctx);
-        /********** 用于调试 ************/
-        print!("4 split_image success\n");
+
+        #[cfg(feature = "debug")]
+        println!("4 split_image success");
 
         // 防止有人设置碎片为 1*1 , (*/ω＼*)
         self.check_game();
 
-        /********** 用于调试 ************/
-        print!("5 init success\n");
+        #[cfg(feature = "debug")]
+        println!("5 init success");
 
-        /********** 用于调试 ************/
-        print!("init set flase\n");
+        #[cfg(feature = "debug")]
+        println!("init set flase");
+
         self.game_state.init = false;
     }
 
@@ -83,24 +87,23 @@ impl GameApp {
             840.0 / self.game_state.count as f32,
         );
         let mut gap = 3.0; // 定义间隙宽度
-        let mut offset = 15.0;
         let mut rect_stroke = 6.0;
 
-        if self.game_state.count < 13 {
-            offset = 15.0;
+        let offset = if self.game_state.count < 13 {
+            15.0
         } else if self.game_state.count < 29 {
-            offset = 10.0;
             rect_stroke = 5.0;
             gap = 1.5;
+            10.0
         } else if self.game_state.count < 51 {
-            offset = 5.0;
             rect_stroke = 3.0;
             gap = 1.0;
+            5.0
         } else {
-            offset = 2.0;
             gap = 0.1;
             rect_stroke = 1.0;
-        }
+            2.0
+        };
 
         let offset_pos = egui::pos2(offset, offset); // 定义起点偏移量
         let total_gap = gap * (self.game_state.count as f32 - 1.0); // 总的间隙宽度
@@ -111,16 +114,26 @@ impl GameApp {
         );
 
         if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() < 21.0 {
-            ui.painter()
-            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_RED));
-        } else if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() >= 21.0{
-            ui.painter()
-            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::from_rgb(178, 102, 255)));
+            ui.painter().rect_stroke(
+                big_rect,
+                0.0,
+                egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_RED),
+            );
+        } else if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() >= 21.0
+        {
+            ui.painter().rect_stroke(
+                big_rect,
+                0.0,
+                egui::Stroke::new(rect_stroke, egui::Color32::from_rgb(178, 102, 255)),
+            );
         } else {
-            ui.painter()
-            .rect_stroke(big_rect, 0.0, egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_BLUE));
+            ui.painter().rect_stroke(
+                big_rect,
+                0.0,
+                egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_BLUE),
+            );
         }
-        
+
         // --------------- diaplay image
         for i in 0..self.game_state.count {
             ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 1.0);
@@ -131,9 +144,9 @@ impl GameApp {
                     // 将init设置为false的时机放在 game_init 的最后一步，否则这里就会因为重开时没有初始化访问到空数组
                     let index = self.game_state.pos[pos as usize] as usize;
 
-                    /********** 用于调试 ************/
+                    #[cfg(feature = "debug")]
                     if self.game_state.init {
-                        print!("[{:>2} - {:>2}] ", pos, index);
+                        println!("[{:>2} - {:>2}]", pos, index);
                     }
 
                     // 计算拼图碎片的位置
@@ -157,7 +170,7 @@ impl GameApp {
                                         840.0 / self.game_state.count as f32,
                                     ],
                                     egui::Image::from_uri(
-                                        self.game_state.pieces[index as usize].uri.clone(),
+                                        self.game_state.pieces[index].uri.clone(),
                                     ),
                                 )
                                 .interact(egui::Sense::click());
@@ -167,10 +180,11 @@ impl GameApp {
                             };
 
                             if !self.game_state.bot && response.clicked() {
-                                /********** 用于调试 ************/
-                                // 打印点击的位置
-                                print!("{} ", pos);
-                                io::stdout().flush().unwrap();
+                                #[cfg(feature = "debug")]
+                                {
+                                    print!("{} ", pos);
+                                    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+                                }
                                 self.game_state.exchange.push(pos);
                                 ui.ctx().request_repaint();
                                 self.exchange_piece();
@@ -191,11 +205,11 @@ impl GameApp {
             });
         }
         if self.game_state.win {
-            self.congratulation(ctx, ui, &mut *SHOW_CONGRULATION.lock().unwrap());
+            self.congratulation(ctx, ui, &mut SHOW_CONGRULATION.lock().unwrap());
         }
     }
 
-    fn congratulation(&mut self, ctx: &egui::Context, ui: &mut egui::Ui, is_open: &mut bool) {
+    fn congratulation(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui, is_open: &mut bool) {
         egui::Window::new("💕Congratulations")
             .title_bar(true)
             .fixed_pos(egui::pos2(0.0, 0.0))
@@ -224,5 +238,4 @@ impl GameApp {
                 }
             });
     }
-
 }
