@@ -48,7 +48,7 @@ impl GameApp {
                 // 将处理好的图片写入到缓存中
                 let mut buf: Cursor<Vec<u8>> = Cursor::new(Vec::new());
                 sub_image
-                    .write_to(&mut buf, image::ImageOutputFormat::Png)
+                    .write_to(&mut buf, image::ImageFormat::Png)
                     .unwrap();
                 let bytes = buf.into_inner();
 
@@ -70,7 +70,7 @@ impl GameApp {
         for i in 0..self.game_state.count * self.game_state.count {
             self.game_state.pos.push(i);
         }
-        self.game_state.pos.shuffle(&mut rand::thread_rng());
+        self.game_state.pos.shuffle(&mut rand::rng());
     }
 
     pub fn exchange_piece(&mut self) {
