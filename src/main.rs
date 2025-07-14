@@ -24,13 +24,6 @@ fn main() -> Result<(), eframe::Error> {
         hardware_acceleration: eframe::HardwareAcceleration::Required, // 设置是否使用硬件加速
         ..Default::default()                                           // 使用其他默认选项
     };
-    // eframe::run_native(
-    //     "puzzle",
-    //     eframe::NativeOptions::default(),
-    //     Box::new(|cc| Box::new(game::GameApp::new(|c|{
-
-    //     }))),
-    // )
     eframe::run_native(
         "WHO IS GOODPEANUTS",
         options,
@@ -43,7 +36,7 @@ fn main() -> Result<(), eframe::Error> {
 
 pub fn setup(cc: &egui::Context) {
     egui_extras::install_image_loaders(cc);
-    //cc.include_bytes(format!("bytes://background"), imgs::IMAGE_background);
+    // cc.include_bytes(format!("bytes://background"), imgs::IMAGE_background);
     cc.include_bytes(format!("bytes://x{}", 1), imgs::IMAGE_1);
     cc.include_bytes(format!("bytes://x{}", 2), imgs::IMAGE_2);
     cc.include_bytes(format!("bytes://x{}", 3), imgs::IMAGE_3);

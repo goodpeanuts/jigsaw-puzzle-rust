@@ -13,6 +13,4 @@ pub mod custom_widget;
 pub mod game;
 pub mod imgs;
 pub mod state;
-pub mod view_gameside;
-pub mod view_home;
-pub mod view_playground;
+pub mod views;

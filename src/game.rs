@@ -15,7 +15,7 @@ use rand::prelude::SliceRandom;
 use std::io::Cursor;
 use std::time::Instant;
 
-use crate::{imgs, state, view_playground};
+use crate::{imgs, state, views::playground};
 
 pub struct GameApp {
     pub ui_state: state::UiState,
@@ -97,7 +97,7 @@ impl GameApp {
                 .try_into()
                 .unwrap()
         ];
-        for layer in 0..(self.game_state.count + 1) / 2 {
+        for layer in 0..(self.game_state.count + 1).div_ceil(2) {
             let start = layer;
             let end = self.game_state.count - layer;
             // Traverse right
@@ -262,7 +262,7 @@ impl GameApp {
         if flag {
             self.game_state.win = true;
             self.game_state.end = true;
-            view_playground::set_show_congrulation(true);
+            playground::set_show_congrulation(true);
             #[cfg(feature = "debug")]
             println!("You win!");
         }
