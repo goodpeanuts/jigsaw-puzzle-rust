@@ -10,7 +10,7 @@
  */
 use crate::game::GameApp;
 use eframe::{
-    egui::{self, Button},
+    egui::{self, Button, UiBuilder},
     epaint::vec2,
 };
 
@@ -118,6 +118,7 @@ impl GameApp {
                 big_rect,
                 0.0,
                 egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_RED),
+                egui::StrokeKind::Middle,
             );
         } else if self.game_state.challenge && self.game_state.start.elapsed().as_secs_f64() >= 21.0
         {
@@ -125,12 +126,14 @@ impl GameApp {
                 big_rect,
                 0.0,
                 egui::Stroke::new(rect_stroke, egui::Color32::from_rgb(178, 102, 255)),
+                egui::StrokeKind::Middle,
             );
         } else {
             ui.painter().rect_stroke(
                 big_rect,
                 0.0,
                 egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_BLUE),
+                egui::StrokeKind::Middle,
             );
         }
 
@@ -161,8 +164,8 @@ impl GameApp {
                         ),
                     );
 
-                    ui.allocate_ui_at_rect(rect, |ui| {
-                        ui.allocate_ui_at_rect(rect, |ui| {
+                    ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
+                        ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
                             let response = ui
                                 .add_sized(
                                     [
@@ -194,7 +197,12 @@ impl GameApp {
                             if self.game_state.exchange.contains(&pos) {
                                 // ui.painter().rect_filled(rect, 0.0, egui::Color32::from_rgb(255, 0, 0));
                                 let stroke = egui::Stroke::new(1.0, egui::Color32::WHITE);
-                                ui.painter().rect_stroke(response.rect, 0.0, stroke);
+                                ui.painter().rect_stroke(
+                                    response.rect,
+                                    0.0,
+                                    stroke,
+                                    egui::StrokeKind::Middle,
+                                );
                             }
                         });
                     });

@@ -18,10 +18,11 @@ use puzzle::imgs;
 
 fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(1200.0, 900.0)), // 设置窗口的宽度和高度
-        resizable: false,                                     // 设置窗口是否可以调整大小
+        viewport: egui::ViewportBuilder::default()
+            .with_inner_size([1200.0, 900.0])
+            .with_resizable(false),
         hardware_acceleration: eframe::HardwareAcceleration::Required, // 设置是否使用硬件加速
-        ..Default::default()                                  // 使用其他默认选项
+        ..Default::default()                                           // 使用其他默认选项
     };
     // eframe::run_native(
     //     "puzzle",
@@ -35,7 +36,7 @@ fn main() -> Result<(), eframe::Error> {
         options,
         Box::new(|cc| {
             setup(&cc.egui_ctx);
-            Box::new(game::GameApp::new(cc)) // Store GameApp in the heap using Box::new
+            Ok(Box::new(game::GameApp::new(cc))) // Store GameApp in the heap using Box::new
         }),
     )
 }

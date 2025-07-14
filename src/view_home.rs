@@ -11,7 +11,7 @@
 use crate::custom_widget::toggle;
 use crate::game::GameApp;
 use crate::{imgs, state};
-use eframe::egui::{self, Button};
+use eframe::egui::{self, Button, Rect, UiBuilder};
 
 impl GameApp {
     pub fn home(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
@@ -40,8 +40,11 @@ impl GameApp {
                     ui.add_space(80.0);
                 });
 
-                ui.allocate_ui_at_rect(
-                    egui::Rect::from_min_max(egui::pos2(935.0, 570.0), egui::pos2(1040.0, 820.0)),
+                ui.scope_builder(
+                    UiBuilder::new().max_rect(egui::Rect::from_min_max(
+                        egui::pos2(935.0, 570.0),
+                        egui::pos2(1040.0, 820.0),
+                    )),
                     |ui| {
                         ui.horizontal(|ui| {
                             //ui.add_space(450.0);
@@ -83,8 +86,11 @@ impl GameApp {
                     },
                 );
 
-                ui.allocate_ui_at_rect(
-                    egui::Rect::from_min_max(egui::pos2(935.0, 360.0), egui::pos2(1040.0, 600.0)),
+                ui.scope_builder(
+                    UiBuilder::new().max_rect(egui::Rect::from_min_max(
+                        egui::pos2(935.0, 360.0),
+                        egui::pos2(1040.0, 600.0),
+                    )),
                     |ui| {
                         ui.vertical_centered_justified(|ui| {
                             ui.add_space(14.0);
@@ -96,8 +102,8 @@ impl GameApp {
                             if ui
                                 .add_sized(
                                     [80.0, 19.0],
-                                    egui::SelectableLabel::new(
-                                        self.game_state.count == 3 && self.game_state.is_custom,
+                                    Button::selectable(
+                                        self.game_state.count == 3 && !self.game_state.is_custom,
                                         egui::RichText::new("easy").size(15.0),
                                     ),
                                 )
@@ -112,8 +118,8 @@ impl GameApp {
                             if ui
                                 .add_sized(
                                     [80.0, 19.0],
-                                    egui::SelectableLabel::new(
-                                        self.game_state.count == 5 && self.game_state.is_custom,
+                                    Button::selectable(
+                                        self.game_state.count == 5 && !self.game_state.is_custom,
                                         egui::RichText::new("normal").size(15.0),
                                     ),
                                 )
@@ -128,8 +134,8 @@ impl GameApp {
                             if ui
                                 .add_sized(
                                     [80.0, 19.0],
-                                    egui::SelectableLabel::new(
-                                        self.game_state.count == 8 && self.game_state.is_custom,
+                                    Button::selectable(
+                                        self.game_state.count == 8 && !self.game_state.is_custom,
                                         egui::RichText::new("difficult").size(15.0),
                                     ),
                                 )
@@ -144,7 +150,7 @@ impl GameApp {
                             if ui
                                 .add_sized(
                                     [80.0, 19.0],
-                                    egui::SelectableLabel::new(
+                                    Button::selectable(
                                         self.game_state.is_custom,
                                         egui::RichText::new("custom").size(15.0),
                                     ),
@@ -159,7 +165,7 @@ impl GameApp {
                                 ui.add_sized(
                                     [100.0, 60.0],
                                     egui::widgets::Slider::new(&mut self.game_state.count, 2..=12)
-                                        .clamp_to_range(false)
+                                        .clamping(egui::SliderClamping::Never)
                                         .text(""),
                                 );
                                 if self.game_state.is_custom
@@ -194,17 +200,22 @@ impl GameApp {
                         big_rect,
                         0.0,
                         egui::Stroke::new(rect_stroke, egui::Color32::from_rgb(178, 102, 255)),
+                        egui::StrokeKind::Middle,
                     );
                 } else {
                     ui.painter().rect_stroke(
                         big_rect,
                         0.0,
                         egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_GRAY),
+                        egui::StrokeKind::Middle,
                     );
                 }
 
-                ui.allocate_ui_at_rect(
-                    egui::Rect::from_min_max(egui::pos2(900.0, 40.0), egui::pos2(1140.0, 280.0)),
+                ui.scope_builder(
+                    UiBuilder::new().max_rect(Rect::from_min_max(
+                        egui::pos2(900.0, 40.0),
+                        egui::pos2(1140.0, 280.0),
+                    )),
                     |ui| {
                         ui.add_sized(
                             [240.0, 240.0],
@@ -213,9 +224,11 @@ impl GameApp {
                     },
                 );
 
-                // 选择图片的多选框
-                ui.allocate_ui_at_rect(
-                    egui::Rect::from_min_max(egui::pos2(930.0, 280.0), egui::pos2(990.0, 350.0)),
+                ui.scope_builder(
+                    UiBuilder::new().max_rect(Rect::from_min_max(
+                        egui::pos2(930.0, 280.0),
+                        egui::pos2(990.0, 350.0),
+                    )),
                     |ui| {
                         ui.horizontal_centered(|ui| {
                             egui::ComboBox::from_label("Select an image")

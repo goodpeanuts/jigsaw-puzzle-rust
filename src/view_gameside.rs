@@ -11,7 +11,7 @@
 
 use crate::game::GameApp;
 use crate::state;
-use eframe::egui;
+use eframe::egui::{self, Button, UiBuilder};
 use std::sync::Mutex;
 
 // 这里的 SHOW_ORIGIN_IMAGE 如果设置在 GameApp 中，调用self.show_origin_image函数时会造成对变量的多次可变引用
@@ -49,7 +49,7 @@ impl GameApp {
 
         let game_side_rect =
             egui::Rect::from_min_max(egui::pos2(900.0, 20.0), egui::pos2(1200.0, 900.0));
-        ui.allocate_ui_at_rect(game_side_rect, |ui| {
+        ui.scope_builder(UiBuilder::new().max_rect(game_side_rect), |ui| {
             ui.allocate_ui_with_layout(
                 ui.available_size(),
                 egui::Layout::top_down(egui::Align::Center),
@@ -80,7 +80,7 @@ impl GameApp {
 
                     let bot_resp = ui.add_sized(
                         [120.0, 40.0],
-                        egui::SelectableLabel::new(
+                        Button::selectable(
                             self.game_state.bot,
                             egui::RichText::new("🎱 Bot").size(21.0),
                         ),

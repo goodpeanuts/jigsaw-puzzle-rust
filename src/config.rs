@@ -19,7 +19,7 @@ pub fn custom_font(cc: &eframe::CreationContext<'_>) {
     // .ttf and .otf files supported.
     fonts.font_data.insert(
         "OPPOSans-L".to_owned(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/YaiHe.ttf")),
+        egui::FontData::from_static(include_bytes!("../assets/fonts/YaiHe.ttf")).into(),
     );
 
     // Put my font first (highest priority) for proportional text:
