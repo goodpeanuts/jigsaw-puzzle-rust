@@ -15,11 +15,15 @@ self.addEventListener('install', function (e) {
   );
 });
 
-/* Serve cached content when offline */
-self.addEventListener('fetch', function (e) {
-  e.respondWith(
-    caches.match(e.request).then(function (response) {
-      return response || fetch(e.request);
-    })
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        // 更新缓存
+        const clone = response.clone();
+        caches.open('dynamic-cache').then(cache => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request)) // 如果网络失败，回退缓存
   );
 });
