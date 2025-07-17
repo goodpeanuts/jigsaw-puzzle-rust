@@ -27,11 +27,11 @@ impl GameApp {
                 ui.vertical_centered(|ui| {
                     // ui.label(egui::RichText::new("Jigsaw Puzzle").size(32.0).color(egui::Color32::LIGHT_GRAY));
 
-                    if self.game_state.count < 5 {
+                    if self.get_game_state().count < 5 {
                         ui.label(egui::RichText::new("✨ Jigsaw Puzzle").size(32.0));
-                    } else if self.game_state.count < 8 {
+                    } else if self.get_game_state().count < 8 {
                         ui.label(egui::RichText::new("🔥 Jigsaw Puzzle").size(32.0));
-                    } else if self.game_state.count < 12 {
+                    } else if self.get_game_state().count < 12 {
                         ui.label(egui::RichText::new("💀 Jigsaw Puzzle").size(32.0));
                     } else {
                         ui.label(egui::RichText::new("🎉 Jigsaw Puzzle").size(32.0));
@@ -49,10 +49,10 @@ impl GameApp {
                         ui.horizontal(|ui| {
                             //ui.add_space(450.0);
                             ui.add_sized([60.0, 60.0], egui::Label::new("Challenge"));
-                            ui.add(toggle(&mut self.game_state.challenge))
+                            ui.add(toggle(&mut self.get_game_state().challenge))
                         });
 
-                        if self.game_state.challenge {
+                        if self.get_game_state().challenge {
                             ui.visuals_mut().widgets.hovered.weak_bg_fill =
                                 egui::Color32::from_rgb(178, 102, 255);
                         } else {
@@ -69,10 +69,10 @@ impl GameApp {
 
                         if start_resp {
                             self.game_init(ctx, ui);
-                            self.ui_state.nav = state::Nav::Game;
+                            self.get_ui_state().nav = state::Nav::Game;
                         }
 
-                        if self.game_state.challenge {
+                        if self.get_game_state().challenge {
                             ui.label(
                                 egui::RichText::new("Time is not unlimited")
                                     .size(12.0)
@@ -103,14 +103,15 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     Button::selectable(
-                                        self.game_state.count == 3 && !self.game_state.is_custom,
+                                        self.get_game_state().count == 3
+                                            && !self.get_game_state().is_custom,
                                         egui::RichText::new("easy").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
-                                self.game_state.count = 3;
-                                self.game_state.is_custom = false;
+                                self.get_game_state().count = 3;
+                                self.get_game_state().is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -119,14 +120,15 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     Button::selectable(
-                                        self.game_state.count == 5 && !self.game_state.is_custom,
+                                        self.get_game_state().count == 5
+                                            && !self.get_game_state().is_custom,
                                         egui::RichText::new("normal").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
-                                self.game_state.count = 5;
-                                self.game_state.is_custom = false;
+                                self.get_game_state().count = 5;
+                                self.get_game_state().is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -135,14 +137,15 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     Button::selectable(
-                                        self.game_state.count == 8 && !self.game_state.is_custom,
+                                        self.get_game_state().count == 8
+                                            && !self.get_game_state().is_custom,
                                         egui::RichText::new("difficult").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
-                                self.game_state.count = 8;
-                                self.game_state.is_custom = false;
+                                self.get_game_state().count = 8;
+                                self.get_game_state().is_custom = false;
                             }
 
                             ui.add_space(9.0);
@@ -151,33 +154,38 @@ impl GameApp {
                                 .add_sized(
                                     [80.0, 19.0],
                                     Button::selectable(
-                                        self.game_state.is_custom,
+                                        self.get_game_state().is_custom,
                                         egui::RichText::new("custom").size(15.0),
                                     ),
                                 )
                                 .clicked()
                             {
-                                self.game_state.is_custom = true;
+                                self.get_game_state().is_custom = true;
                             }
 
                             // 自定义碎片数量
-                            if self.game_state.is_custom {
+                            if self.get_game_state().is_custom {
                                 ui.add_sized(
                                     [100.0, 60.0],
-                                    egui::widgets::Slider::new(&mut self.game_state.count, 2..=12)
-                                        .clamping(egui::SliderClamping::Never)
-                                        .text(""),
+                                    egui::widgets::Slider::new(
+                                        &mut self.get_game_state().count,
+                                        2..=12,
+                                    )
+                                    .clamping(egui::SliderClamping::Never)
+                                    .text(""),
                                 );
-                                if self.game_state.is_custom
-                                    && self.game_state.count >= 13
-                                    && self.game_state.count < 51
+                                if self.get_game_state().is_custom
+                                    && self.get_game_state().count >= 13
+                                    && self.get_game_state().count < 51
                                 {
                                     ui.label(
                                         egui::RichText::new("For Fun")
                                             .size(14.0)
                                             .color(egui::Color32::LIGHT_GREEN),
                                     );
-                                } else if self.game_state.is_custom && self.game_state.count >= 51 {
+                                } else if self.get_game_state().is_custom
+                                    && self.get_game_state().count >= 51
+                                {
                                     ui.label(
                                         egui::RichText::new("Not Recommend")
                                             .size(14.0)
@@ -195,7 +203,7 @@ impl GameApp {
                     egui::pos2(1140.0, 280.0), // 加上边缘的偏移量
                 );
 
-                if self.game_state.challenge {
+                if self.get_game_state().challenge {
                     ui.painter().rect_stroke(
                         big_rect,
                         0.0,
@@ -219,7 +227,7 @@ impl GameApp {
                     |ui| {
                         ui.add_sized(
                             [240.0, 240.0],
-                            egui::Image::from_uri(self.img.get_byte_uri()),
+                            egui::Image::from_uri(self.get_img().get_byte_uri()),
                         );
                     },
                 );
@@ -232,11 +240,11 @@ impl GameApp {
                     |ui| {
                         ui.horizontal_centered(|ui| {
                             egui::ComboBox::from_label("Select an image")
-                                .selected_text(format!("{:?}", self.img.show_name()))
+                                .selected_text(format!("{:?}", self.get_img().show_name()))
                                 .width(120.0)
                                 .show_ui(ui, |ui| {
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image1,
                                         "First",
                                     )
@@ -247,7 +255,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image2,
                                         "Second",
                                     )
@@ -258,7 +266,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image3,
                                         "Third",
                                     )
@@ -269,7 +277,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image4,
                                         "Fourth",
                                     )
@@ -280,7 +288,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image5,
                                         "Fifth",
                                     )
@@ -291,7 +299,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image6,
                                         "Sixth",
                                     )
@@ -302,7 +310,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image7,
                                         "Seventh",
                                     )
@@ -313,7 +321,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image8,
                                         "Eighth",
                                     )
@@ -324,7 +332,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image9,
                                         "Ninth",
                                     )
@@ -335,7 +343,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image10,
                                         "Tenth",
                                     )
@@ -346,7 +354,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image11,
                                         "Eleventh",
                                     )
@@ -357,7 +365,7 @@ impl GameApp {
                                         );
                                     });
                                     ui.selectable_value(
-                                        &mut self.img,
+                                        &mut *self.get_mut_img(),
                                         imgs::ImageChoice::Image12,
                                         "Twelfth",
                                     )

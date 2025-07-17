@@ -10,11 +10,13 @@
  */
 use std::time;
 
+#[derive(Clone, Copy)]
 pub enum Nav {
     Home,
     Game,
 }
 
+#[derive(Clone)]
 pub struct Piece {
     pub id: u32,
     pub uri: String,
@@ -29,6 +31,7 @@ impl Piece {
     }
 }
 
+#[derive(Clone)]
 pub struct GameState {
     pub init: bool,
     pub win: bool,
@@ -114,6 +117,7 @@ impl GameState {
     }
 }
 
+#[derive(Clone, Copy)]
 pub struct UiState {
     pub nav: Nav,
 }

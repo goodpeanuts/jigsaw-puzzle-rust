@@ -12,6 +12,8 @@
 // use image;
 // use image::{DynamicImage, GenericImageView};
 
+use serde::Serialize;
+
 //pub const IMAGE_background: &'static [u8] = include_bytes!("../assets/img/bg.jpg");
 pub const IMAGE_1: &[u8] = include_bytes!("../assets/img/1.png");
 pub const IMAGE_2: &[u8] = include_bytes!("../assets/img/2.png");
@@ -40,7 +42,7 @@ pub const IMAGE_URI_10: &str = "bytes://x10";
 pub const IMAGE_URI_11: &str = "bytes://x11";
 pub const IMAGE_URI_12: &str = "bytes://x12";
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Serialize, Clone, Copy, PartialEq)]
 pub enum ImageChoice {
     Image1,
     Image2,

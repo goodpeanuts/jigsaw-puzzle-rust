@@ -8,19 +8,52 @@
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
+use anyhow;
 use chrono;
 use eframe::egui;
 use image::GenericImageView;
 use rand::prelude::SliceRandom;
 use std::io::Cursor;
 use std::time::Instant;
+use wasm_bindgen::prelude::*;
 
 use crate::{imgs, state, views::playground};
 
+#[wasm_bindgen]
+#[derive(Clone)]
 pub struct GameApp {
-    pub ui_state: state::UiState,
-    pub game_state: state::GameState,
-    pub img: imgs::ImageChoice,
+    ui_state: state::UiState,
+    game_state: state::GameState,
+    #[wasm_bindgen(getter)]
+    img: imgs::ImageChoice,
+}
+
+use serde_wasm_bindgen::to_value;
+
+#[wasm_bindgen]
+impl GameApp {
+    #[wasm_bindgen(getter)]
+    pub fn img(&self) -> JsValue {
+        to_value(&self.img).unwrap()
+    }
+}
+
+impl GameApp {
+    pub fn get_img(&self) -> &imgs::ImageChoice {
+        &self.img
+    }
+
+    pub fn get_ui_state(&mut self) -> &mut state::UiState {
+        &mut self.ui_state
+    }
+
+    pub fn get_game_state(&mut self) -> &mut state::GameState {
+        &mut self.game_state
+    }
+
+    pub fn get_mut_img(&mut self) -> &mut imgs::ImageChoice {
+        &mut self.img
+    }
 }
 
 impl GameApp {
@@ -246,7 +279,7 @@ impl GameApp {
     }
 
     // 计算其他情况下的挑战模式限制
-    pub fn calculate_time_limit(&mut self, x: f64) -> f64 {
+    pub fn calculate_time_limit(&self, x: f64) -> f64 {
         18.5 * x * x - 110.5 * x + 180.0
     }
 
@@ -268,15 +301,17 @@ impl GameApp {
         }
     }
 
-    pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
+    pub fn new(_cc: &eframe::CreationContext<'_>) -> anyhow::Result<Self> {
         //config::custom_font(cc);
-        GameApp {
+        let app = std::panic::catch_unwind(|| GameApp {
             game_state: state::GameState::new(),
             ui_state: state::UiState {
                 nav: state::Nav::Home,
             },
             img: imgs::ImageChoice::Image6,
-        }
+        })
+        .map_err(|_| anyhow::anyhow!("Failed to initialize game application"))?;
+        Ok(app)
     }
 }
 
