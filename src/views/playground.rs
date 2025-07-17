@@ -2,13 +2,16 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:15:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-08 23:55:38
- * @FilePath: \puzzle\src\view_playground.rs
+ * @LastEditTime: 2025-07-17 20:22:04
+ * @FilePath: /jigsaw-puzzle-rust/src/views/playground.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-use crate::game::GameApp;
+use crate::{
+    game::GameApp,
+    time::{TimeDelta, TimeStamp},
+};
 use eframe::{
     egui::{self, Button, UiBuilder},
     epaint::vec2,
@@ -33,28 +36,28 @@ impl GameApp {
         if self.get_game_state().challenge {
             match self.get_game_state().count {
                 2 => {
-                    self.get_game_state().limit = 10.0;
+                    self.get_game_state().limit = TimeDelta::seconds(10);
                 }
                 3 => {
-                    self.get_game_state().limit = 15.0;
+                    self.get_game_state().limit = TimeDelta::seconds(15);
                 }
                 5 => {
-                    self.get_game_state().limit = 90.0;
+                    self.get_game_state().limit = TimeDelta::seconds(90);
                 }
                 8 => {
-                    self.get_game_state().limit = 480.0;
+                    self.get_game_state().limit = TimeDelta::seconds(480);
                 }
                 _ => {
                     let game_state_count = self.get_game_state().count as f64;
                     let new_limit = self.calculate_time_limit(game_state_count);
-                    self.get_game_state().limit = new_limit;
+                    self.get_game_state().limit = TimeDelta::seconds(new_limit);
                 }
             }
         }
         #[cfg(feature = "debug")]
         println!("1 set game_state.limit success");
 
-        self.get_game_state().start = std::time::Instant::now();
+        self.get_game_state().start = TimeStamp::instant();
 
         #[cfg(feature = "debug")]
         println!("2 set game_state.start success");
@@ -116,7 +119,7 @@ impl GameApp {
         );
 
         if self.get_game_state().challenge
-            && self.get_game_state().start.elapsed().as_secs_f64() < 21.0
+            && self.get_game_state().start.elapsed() < TimeDelta::seconds(21.0)
         {
             ui.painter().rect_stroke(
                 big_rect,
@@ -125,7 +128,7 @@ impl GameApp {
                 egui::StrokeKind::Middle,
             );
         } else if self.get_game_state().challenge
-            && self.get_game_state().start.elapsed().as_secs_f64() >= 21.0
+            && self.get_game_state().start.elapsed() >= TimeDelta::seconds(21.0)
         {
             ui.painter().rect_stroke(
                 big_rect,

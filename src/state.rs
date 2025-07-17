@@ -8,7 +8,8 @@
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-use std::time;
+
+use crate::time::{TimeDelta, TimeStamp};
 
 #[derive(Clone, Copy)]
 pub enum Nav {
@@ -41,14 +42,14 @@ pub struct GameState {
     pub pos: Vec<u32>,
     pub exchange: Vec<u32>,
     pub challenge: bool,
-    pub start: std::time::Instant,
-    pub duration: f64,
-    pub limit: f64,
-    pub rest: f64,
+    pub start: TimeStamp,
+    pub duration: TimeDelta,
+    pub limit: TimeDelta,
+    pub rest: TimeDelta,
     pub is_custom: bool,
     pub custom_str: String,
     pub bot: bool,
-    pub step_time: time::Instant, // 用于计算每一步走的时间
+    pub last_step_timestamp: TimeStamp, // 用于计算每一步走的时间
     pub recovery: Vec<u32>,
 
     // !
@@ -72,14 +73,14 @@ impl GameState {
             exchange: Vec::new(),
             count: 3,
             challenge: false,
-            start: std::time::Instant::now(),
-            duration: 0.0,
-            limit: 300.0,
-            rest: 300.0,
+            start: TimeStamp::instant(),
+            duration: TimeDelta::milliseconds(0.0),
+            limit: TimeDelta::seconds(300.0),
+            rest: TimeDelta::seconds(300.0),
             is_custom: false,
             custom_str: String::new(),
             bot: false,
-            step_time: time::Instant::now(),
+            last_step_timestamp: TimeStamp::instant(),
             recovery: Vec::new(),
 
             // !
@@ -105,14 +106,14 @@ impl GameState {
         self.exchange.clear();
         self.count = 3;
         self.challenge = false;
-        self.start = time::Instant::now();
-        self.duration = 0.0;
-        self.limit = 300.0;
-        self.rest = 300.0;
+        self.start = TimeStamp::instant();
+        self.duration = TimeDelta::milliseconds(0.0);
+        self.limit = TimeDelta::seconds(300.0);
+        self.rest = TimeDelta::seconds(300.0);
         self.is_custom = false;
         self.custom_str = String::new();
         self.bot = false;
-        self.step_time = time::Instant::now();
+        self.last_step_timestamp = TimeStamp::instant();
         self.recovery.clear();
     }
 }

@@ -2,14 +2,14 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:23:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:36:21
- * @FilePath: \puzzle\src\view_home.rs
+ * @LastEditTime: 2025-07-17 20:22:00
+ * @FilePath: /jigsaw-puzzle-rust/src/views/home.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-use crate::custom_widget::toggle;
 use crate::game::GameApp;
+use crate::views::custom_widget::toggle;
 use crate::{imgs, state};
 use eframe::egui::{self, Button, Rect, UiBuilder};
 

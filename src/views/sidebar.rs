@@ -2,15 +2,15 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-07 10:31:27
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:25:40
- * @FilePath: \puzzle\src\view_gameside.rs
+ * @LastEditTime: 2025-07-17 20:22:08
+ * @FilePath: /jigsaw-puzzle-rust/src/views/sidebar.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 
-use crate::game::GameApp;
 use crate::state;
+use crate::{game::GameApp, time::TimeDelta};
 use eframe::egui::{self, Button, UiBuilder};
 use std::sync::Mutex;
 
@@ -167,7 +167,7 @@ impl GameApp {
                         // 挑战模式时时间为红色和绿色
                         // 非挑战模式时时间为蓝色
                         let time_color = if self.get_game_state().challenge
-                            && self.get_game_state().rest < 21.0
+                            && self.get_game_state().rest < TimeDelta::seconds(21)
                         {
                             egui::Color32::LIGHT_RED
                         } else if self.get_game_state().challenge {

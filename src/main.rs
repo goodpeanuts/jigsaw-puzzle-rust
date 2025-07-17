@@ -2,13 +2,12 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:28:10
- * @FilePath: \puzzle\src\main.rs
+ * @LastEditTime: 2025-07-17 20:22:37
+ * @FilePath: /jigsaw-puzzle-rust/src/main.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-// ./src/main.rs
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
 use eframe::egui;

@@ -2,22 +2,24 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:24:11
- * @FilePath: \puzzle\src\game.rs
+ * @LastEditTime: 2025-07-17 20:27:14
+ * @FilePath: /jigsaw-puzzle-rust/src/game.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 use anyhow;
-use chrono;
 use eframe::egui;
 use image::GenericImageView;
 use rand::prelude::SliceRandom;
 use std::io::Cursor;
-use std::time::Instant;
 use wasm_bindgen::prelude::*;
 
-use crate::{imgs, state, views::playground};
+use crate::{
+    imgs, state,
+    time::{TimeDelta, TimeStamp},
+    views::playground,
+};
 
 #[wasm_bindgen]
 #[derive(Clone)]
@@ -173,14 +175,10 @@ impl GameApp {
     // 机器人操作复原
     pub fn recover(&mut self) {
         //控制复原速度
-        let gap = self.game_state.step_time.elapsed().as_secs_f64();
-        match gap > 0.05 {
-            true => {
-                self.game_state.step_time = Instant::now();
-            }
-            false => {
-                return;
-            }
+        if self.game_state.last_step_timestamp.elapsed() > TimeDelta::milliseconds(50) {
+            self.game_state.last_step_timestamp = TimeStamp::instant();
+        } else {
+            return;
         }
 
         let pos_len = self.game_state.count * self.game_state.count;
@@ -238,15 +236,14 @@ impl GameApp {
     // 计算返回游戏进行时长
     pub fn get_elasp_time_str(&mut self) -> String {
         if !self.game_state.win {
-            self.game_state.duration = self.game_state.start.elapsed().as_secs_f64();
+            self.game_state.duration = self.game_state.start.elapsed();
         }
-        let duration = chrono::Duration::seconds(self.game_state.duration as i64);
 
-        if duration < chrono::Duration::seconds(60) {
-            format!("{:.2}", self.game_state.duration)
+        if self.game_state.duration < TimeDelta::seconds(60) {
+            format!("00:{:02}", self.game_state.duration.num_seconds())
         } else {
-            let minutes = duration.num_minutes();
-            let seconds = duration.num_seconds() - (minutes * 60);
+            let minutes = self.game_state.duration.num_minutes();
+            let seconds = self.game_state.duration.num_seconds();
             format!("{:02}:{:02}", minutes, seconds)
         }
     }
@@ -254,27 +251,23 @@ impl GameApp {
     // 计算返回游戏剩余时间
     pub fn get_rest_time_str(&mut self) -> String {
         if !self.game_state.win && !self.game_state.end && self.game_state.challenge {
-            self.game_state.rest =
-                self.game_state.limit - self.game_state.start.elapsed().as_secs_f64();
+            self.game_state.rest = self.game_state.limit - self.game_state.start.elapsed();
         }
 
-        if self.game_state.rest < 0.0 {
-            self.game_state.rest = 0.0;
+        if self.game_state.rest < TimeDelta::milliseconds(0) {
+            self.game_state.rest = TimeDelta::milliseconds(0);
         }
 
-        let rest = chrono::Duration::seconds(self.game_state.rest as i64);
-
-        if self.game_state.challenge && rest == chrono::Duration::seconds(0) {
+        if self.game_state.challenge && self.game_state.rest == TimeDelta::milliseconds(0) {
             // 挑战模式时间耗尽,则结束
             self.game_state.end = true;
-            self.game_state.rest = 0.0;
             "00:00".to_string()
-        } else if rest < chrono::Duration::seconds(60) {
-            format!("{:.2}", self.game_state.rest)
+        } else if self.game_state.rest < TimeDelta::seconds(60) {
+            format!("{:.2}", self.game_state.rest.num_seconds())
         } else {
-            let minutes = rest.num_minutes();
-            let seconds = rest.num_seconds() - (minutes * 60);
-            format!("{:02}:{:02}", minutes, seconds).to_string()
+            let minutes = self.game_state.rest.num_minutes();
+            let seconds = self.game_state.rest.num_seconds();
+            format!("{:02}:{:02}", minutes, seconds)
         }
     }
 
