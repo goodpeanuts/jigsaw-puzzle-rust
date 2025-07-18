@@ -2,22 +2,22 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:15:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-17 20:22:04
+ * @LastEditTime: 2025-07-18 11:35:49
  * @FilePath: /jigsaw-puzzle-rust/src/views/playground.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 use crate::{
-    game::GameApp,
-    time::{TimeDelta, TimeStamp},
+    app::GameApp,
+    common::time::{TimeDelta, TimeStamp},
 };
 use eframe::{
     egui::{self, Button, UiBuilder},
     epaint::vec2,
 };
 
-use crate::state;
+use crate::app::state;
 use std::sync::Mutex;
 
 lazy_static::lazy_static! {
@@ -33,31 +33,31 @@ impl GameApp {
     // 对局开始初始化，设置碎片个数并打乱，设置计时模式
     pub fn game_init(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui) {
         // 如果是挑战模式，设置时间限制
-        if self.get_game_state().challenge {
-            match self.get_game_state().count {
+        if self.game_state().challenge {
+            match self.game_state().count {
                 2 => {
-                    self.get_game_state().limit = TimeDelta::seconds(10);
+                    self.game_state().limit = TimeDelta::seconds(10);
                 }
                 3 => {
-                    self.get_game_state().limit = TimeDelta::seconds(15);
+                    self.game_state().limit = TimeDelta::seconds(15);
                 }
                 5 => {
-                    self.get_game_state().limit = TimeDelta::seconds(90);
+                    self.game_state().limit = TimeDelta::seconds(90);
                 }
                 8 => {
-                    self.get_game_state().limit = TimeDelta::seconds(480);
+                    self.game_state().limit = TimeDelta::seconds(480);
                 }
                 _ => {
-                    let game_state_count = self.get_game_state().count as f64;
+                    let game_state_count = self.game_state().count as f64;
                     let new_limit = self.calculate_time_limit(game_state_count);
-                    self.get_game_state().limit = TimeDelta::seconds(new_limit);
+                    self.game_state().limit = TimeDelta::seconds(new_limit);
                 }
             }
         }
         #[cfg(feature = "debug")]
         println!("1 set game_state.limit success");
 
-        self.get_game_state().start = TimeStamp::instant();
+        self.game_state().start = TimeStamp::instant();
 
         #[cfg(feature = "debug")]
         println!("2 set game_state.start success");
@@ -82,25 +82,25 @@ impl GameApp {
         #[cfg(feature = "debug")]
         println!("init set flase");
 
-        self.get_game_state().init = false;
+        self.game_state().init = false;
     }
 
     pub fn playground(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
         // 计算大框矩形的位置
         let img_size = vec2(
-            840.0 / self.get_game_state().count as f32,
-            840.0 / self.get_game_state().count as f32,
+            840.0 / self.game_state().count as f32,
+            840.0 / self.game_state().count as f32,
         );
         let mut gap = 3.0; // 定义间隙宽度
         let mut rect_stroke = 6.0;
 
-        let offset = if self.get_game_state().count < 13 {
+        let offset = if self.game_state().count < 13 {
             15.0
-        } else if self.get_game_state().count < 29 {
+        } else if self.game_state().count < 29 {
             rect_stroke = 5.0;
             gap = 1.5;
             10.0
-        } else if self.get_game_state().count < 51 {
+        } else if self.game_state().count < 51 {
             rect_stroke = 3.0;
             gap = 1.0;
             5.0
@@ -111,15 +111,15 @@ impl GameApp {
         };
 
         let offset_pos = egui::pos2(offset, offset); // 定义起点偏移量
-        let total_gap = gap * (self.get_game_state().count as f32 - 1.0); // 总的间隙宽度
-        let total_size = img_size.x * self.get_game_state().count as f32 + total_gap; // 总的大小
+        let total_gap = gap * (self.game_state().count as f32 - 1.0); // 总的间隙宽度
+        let total_size = img_size.x * self.game_state().count as f32 + total_gap; // 总的大小
         let big_rect = egui::Rect::from_min_max(
             egui::pos2(offset - gap, offset - gap), // 减去边缘的偏移量
             egui::pos2(offset + total_size + gap, offset + total_size + gap), // 加上边缘的偏移量
         );
 
-        if self.get_game_state().challenge
-            && self.get_game_state().start.elapsed() < TimeDelta::seconds(21.0)
+        if self.game_state().challenge
+            && self.game_state().start.elapsed() < TimeDelta::seconds(21.0)
         {
             ui.painter().rect_stroke(
                 big_rect,
@@ -127,8 +127,8 @@ impl GameApp {
                 egui::Stroke::new(rect_stroke, egui::Color32::LIGHT_RED),
                 egui::StrokeKind::Middle,
             );
-        } else if self.get_game_state().challenge
-            && self.get_game_state().start.elapsed() >= TimeDelta::seconds(21.0)
+        } else if self.game_state().challenge
+            && self.game_state().start.elapsed() >= TimeDelta::seconds(21.0)
         {
             ui.painter().rect_stroke(
                 big_rect,
@@ -146,17 +146,17 @@ impl GameApp {
         }
 
         // --------------- diaplay image
-        for i in 0..self.get_game_state().count {
+        for i in 0..self.game_state().count {
             ui.spacing_mut().item_spacing = egui::Vec2::new(1.0, 1.0);
             ui.horizontal(|ui| {
-                for j in 0..self.get_game_state().count {
-                    let pos = i * self.get_game_state().count + j; // 界面中碎片的位置
+                for j in 0..self.game_state().count {
+                    let pos = i * self.game_state().count + j; // 界面中碎片的位置
 
                     // 将init设置为false的时机放在 game_init 的最后一步，否则这里就会因为重开时没有初始化访问到空数组
-                    let index = self.get_game_state().pos[pos as usize] as usize;
+                    let index = self.game_state().pos[pos as usize] as usize;
 
                     #[cfg(feature = "debug")]
-                    if self.get_game_state().init {
+                    if self.game_state().init {
                         println!("[{:>2} - {:>2}]", pos, index);
                     }
 
@@ -177,32 +177,32 @@ impl GameApp {
                             let response = ui
                                 .add_sized(
                                     [
-                                        840.0 / self.get_game_state().count as f32,
-                                        840.0 / self.get_game_state().count as f32,
+                                        840.0 / self.game_state().count as f32,
+                                        840.0 / self.game_state().count as f32,
                                     ],
                                     egui::Image::from_uri(
-                                        self.get_game_state().pieces[index].uri.clone(),
+                                        self.game_state().pieces[index].uri.clone(),
                                     ),
                                 )
                                 .interact(egui::Sense::click());
 
-                            if !self.get_game_state().bot && response.hovered() {
+                            if !self.game_state().bot && response.hovered() {
                                 ui.ctx().set_cursor_icon(egui::CursorIcon::PointingHand);
                             };
 
-                            if !self.get_game_state().bot && response.clicked() {
+                            if !self.game_state().bot && response.clicked() {
                                 #[cfg(feature = "debug")]
                                 {
                                     print!("{} ", pos);
                                     std::io::Write::flush(&mut std::io::stdout()).unwrap();
                                 }
-                                self.get_game_state().exchange.push(pos);
+                                self.game_state().exchange.push(pos);
                                 ui.ctx().request_repaint();
                                 self.exchange_piece();
                                 ui.ctx().request_repaint();
                             }
 
-                            if self.get_game_state().exchange.contains(&pos) {
+                            if self.game_state().exchange.contains(&pos) {
                                 // ui.painter().rect_filled(rect, 0.0, egui::Color32::from_rgb(255, 0, 0));
                                 let stroke = egui::Stroke::new(1.0, egui::Color32::WHITE);
                                 ui.painter().rect_stroke(
@@ -215,12 +215,12 @@ impl GameApp {
                         });
                     });
                 }
-                if self.get_game_state().init {
+                if self.game_state().init {
                     println!();
                 }
             });
         }
-        if self.get_game_state().win {
+        if self.game_state().win {
             self.congratulation(ctx, ui, &mut SHOW_CONGRULATION.lock().unwrap());
         }
     }
@@ -239,7 +239,7 @@ impl GameApp {
                     ui.label(egui::RichText::new("YOU MADE IT！").size(20.0));
                     ui.add_sized(
                         [800.0, 800.0],
-                        egui::Image::from_uri(self.get_img().get_byte_uri()),
+                        egui::Image::from_uri(self.img().get_byte_uri()),
                     );
                 });
 
@@ -249,8 +249,8 @@ impl GameApp {
                     .clicked();
 
                 if restart_resp {
-                    self.get_ui_state().nav = state::Nav::Home;
-                    self.get_game_state().reset_game_state();
+                    self.ui_state().nav = state::Nav::Home;
+                    self.game_state().reset_game_state();
                 }
             });
     }

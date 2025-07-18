@@ -1,6 +1,6 @@
 {
     "rust-analyzer.cargo.features": ["debug"],
-    "rust-analyzer.cargo.target": "aarch64-apple-darwin",
+    "rust-analyzer.cargo.target": "wasm32-unknown-unknown",
     "rust-analyzer.check.targets": [
         "aarch64-apple-darwin",
         "wasm32-unknown-unknown",

@@ -2,15 +2,14 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-03 18:56:27
- * @FilePath: \puzzle\src\config.rs
+ * @LastEditTime: 2025-07-18 11:41:34
+ * @FilePath: /jigsaw-puzzle-rust/src/common/config.rs
  * @Description: help display chinese characters in egui
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 
-use eframe::egui;
-
+#[cfg(feature = "chinese")]
 pub fn custom_font(cc: &eframe::CreationContext<'_>) {
     // Start with the default fonts (we will be adding to them rather than replacing them).
     let mut fonts = egui::FontDefinitions::default();
@@ -19,7 +18,7 @@ pub fn custom_font(cc: &eframe::CreationContext<'_>) {
     // .ttf and .otf files supported.
     fonts.font_data.insert(
         "OPPOSans-L".to_owned(),
-        egui::FontData::from_static(include_bytes!("../assets/fonts/YaiHe.ttf")).into(),
+        egui::FontData::from_static(include_bytes!("../../assets/fonts/YaiHe.ttf")).into(),
     );
 
     // Put my font first (highest priority) for proportional text:

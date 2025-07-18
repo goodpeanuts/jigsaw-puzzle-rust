@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-17 20:22:37
+ * @LastEditTime: 2025-07-18 11:40:44
  * @FilePath: /jigsaw-puzzle-rust/src/main.rs
  * @Description:
  *
@@ -10,15 +10,13 @@
  */
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use eframe::egui;
-use puzzle::game;
-
-use puzzle::imgs;
+use puzzle::app;
+use puzzle::common::load_images;
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default()
+        viewport: eframe::egui::ViewportBuilder::default()
             .with_inner_size([1200.0, 900.0])
             .with_resizable(false),
         hardware_acceleration: eframe::HardwareAcceleration::Required, // 设置是否使用硬件加速
@@ -28,10 +26,10 @@ fn main() -> Result<(), eframe::Error> {
         "WHO IS GOODPEANUTS",
         options,
         Box::new(|cc| {
-            setup(&cc.egui_ctx);
+            load_images(&cc.egui_ctx);
 
             // 使用 new 来安全创建 GameApp (现在返回 Result)
-            match game::GameApp::new(cc) {
+            match app::GameApp::new(cc) {
                 Ok(app) => Ok(Box::new(app)),
                 Err(e) => {
                     eprintln!("Failed to create GameApp: {}", e);
@@ -69,10 +67,10 @@ fn main() {
                 canvas,
                 web_options,
                 Box::new(|cc| {
-                    setup(&cc.egui_ctx);
+                    load_images(&cc.egui_ctx);
 
                     // 使用 new 来安全创建 GameApp (现在返回 Result)
-                    match game::GameApp::new(cc) {
+                    match app::GameApp::new(cc) {
                         Ok(app) => Ok(Box::new(app)),
                         Err(e) => {
                             log::error!("Failed to create GameApp: {}", e);
@@ -99,21 +97,4 @@ fn main() {
             }
         }
     });
-}
-
-pub fn setup(cc: &egui::Context) {
-    egui_extras::install_image_loaders(cc);
-    // cc.include_bytes(format!("bytes://background"), imgs::IMAGE_background);
-    cc.include_bytes(format!("bytes://x{}", 1), imgs::IMAGE_1);
-    cc.include_bytes(format!("bytes://x{}", 2), imgs::IMAGE_2);
-    cc.include_bytes(format!("bytes://x{}", 3), imgs::IMAGE_3);
-    cc.include_bytes(format!("bytes://x{}", 4), imgs::IMAGE_4);
-    cc.include_bytes(format!("bytes://x{}", 5), imgs::IMAGE_5);
-    cc.include_bytes(format!("bytes://x{}", 6), imgs::IMAGE_6);
-    cc.include_bytes(format!("bytes://x{}", 7), imgs::IMAGE_7);
-    cc.include_bytes(format!("bytes://x{}", 8), imgs::IMAGE_8);
-    cc.include_bytes(format!("bytes://x{}", 9), imgs::IMAGE_9);
-    cc.include_bytes(format!("bytes://x{}", 10), imgs::IMAGE_10);
-    cc.include_bytes(format!("bytes://x{}", 11), imgs::IMAGE_11);
-    cc.include_bytes(format!("bytes://x{}", 12), imgs::IMAGE_12);
 }

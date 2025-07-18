@@ -2,31 +2,46 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 21:18:49
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:25:13
- * @FilePath: \puzzle\src\imgs.rs
+ * @LastEditTime: 2025-07-18 11:48:20
+ * @FilePath: /jigsaw-puzzle-rust/src/common/images.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
-// use eframe::egui;
-// use image;
-// use image::{DynamicImage, GenericImageView};
 
+use eframe::egui;
 use serde::Serialize;
 
+pub fn load_images(cc: &egui::Context) {
+    egui_extras::install_image_loaders(cc);
+    // cc.include_bytes(format!("bytes://background"), imgs::IMAGE_background);
+    cc.include_bytes(format!("bytes://x{}", 1), IMAGE_1);
+    cc.include_bytes(format!("bytes://x{}", 2), IMAGE_2);
+    cc.include_bytes(format!("bytes://x{}", 3), IMAGE_3);
+    cc.include_bytes(format!("bytes://x{}", 4), IMAGE_4);
+    cc.include_bytes(format!("bytes://x{}", 5), IMAGE_5);
+    cc.include_bytes(format!("bytes://x{}", 6), IMAGE_6);
+    cc.include_bytes(format!("bytes://x{}", 7), IMAGE_7);
+    cc.include_bytes(format!("bytes://x{}", 8), IMAGE_8);
+    cc.include_bytes(format!("bytes://x{}", 9), IMAGE_9);
+    cc.include_bytes(format!("bytes://x{}", 10), IMAGE_10);
+    cc.include_bytes(format!("bytes://x{}", 11), IMAGE_11);
+    cc.include_bytes(format!("bytes://x{}", 12), IMAGE_12);
+}
+
 //pub const IMAGE_background: &'static [u8] = include_bytes!("../assets/img/bg.jpg");
-pub const IMAGE_1: &[u8] = include_bytes!("../assets/img/1.png");
-pub const IMAGE_2: &[u8] = include_bytes!("../assets/img/2.png");
-pub const IMAGE_3: &[u8] = include_bytes!("../assets/img/3.png");
-pub const IMAGE_4: &[u8] = include_bytes!("../assets/img/4.png");
-pub const IMAGE_5: &[u8] = include_bytes!("../assets/img/5.png");
-pub const IMAGE_6: &[u8] = include_bytes!("../assets/img/6.png");
-pub const IMAGE_7: &[u8] = include_bytes!("../assets/img/7.png");
-pub const IMAGE_8: &[u8] = include_bytes!("../assets/img/8.jpg");
-pub const IMAGE_9: &[u8] = include_bytes!("../assets/img/9.png");
-pub const IMAGE_10: &[u8] = include_bytes!("../assets/img/10.png");
-pub const IMAGE_11: &[u8] = include_bytes!("../assets/img/11.png");
-pub const IMAGE_12: &[u8] = include_bytes!("../assets/img/12.png");
+pub const IMAGE_1: &[u8] = include_bytes!("../../assets/img/1.png");
+pub const IMAGE_2: &[u8] = include_bytes!("../../assets/img/2.png");
+pub const IMAGE_3: &[u8] = include_bytes!("../../assets/img/3.png");
+pub const IMAGE_4: &[u8] = include_bytes!("../../assets/img/4.png");
+pub const IMAGE_5: &[u8] = include_bytes!("../../assets/img/5.png");
+pub const IMAGE_6: &[u8] = include_bytes!("../../assets/img/6.png");
+pub const IMAGE_7: &[u8] = include_bytes!("../../assets/img/7.png");
+pub const IMAGE_8: &[u8] = include_bytes!("../../assets/img/8.jpg");
+pub const IMAGE_9: &[u8] = include_bytes!("../../assets/img/9.png");
+pub const IMAGE_10: &[u8] = include_bytes!("../../assets/img/10.png");
+pub const IMAGE_11: &[u8] = include_bytes!("../../assets/img/11.png");
+pub const IMAGE_12: &[u8] = include_bytes!("../../assets/img/12.png");
 
 //pub const IMAGE_URI_background: &'static str = "bytes://background";
 pub const IMAGE_URI_1: &str = "bytes://x1";

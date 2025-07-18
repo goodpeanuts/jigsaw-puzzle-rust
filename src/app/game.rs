@@ -1,65 +1,28 @@
 /*
  * @Author: goodpeanuts goodpeanuts@foxmail.com
- * @Date: 2023-11-03 14:35:18
+ * @Date: 2025-07-18 11:40:23
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-17 20:27:14
- * @FilePath: /jigsaw-puzzle-rust/src/game.rs
+ * @LastEditTime: 2025-07-18 14:07:45
+ * @FilePath: /jigsaw-puzzle-rust/src/app/game.rs
  * @Description:
  *
- * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
+ * Copyright (c) 2025 by goodpeanuts, All Rights Reserved.
  */
-use anyhow;
+
 use eframe::egui;
 use image::GenericImageView;
 use rand::prelude::SliceRandom;
 use std::io::Cursor;
-use wasm_bindgen::prelude::*;
 
 use crate::{
-    imgs, state,
-    time::{TimeDelta, TimeStamp},
+    common::images,
+    common::time::{TimeDelta, TimeStamp},
     views::playground,
 };
 
-#[wasm_bindgen]
-#[derive(Clone)]
-pub struct GameApp {
-    ui_state: state::UiState,
-    game_state: state::GameState,
-    #[wasm_bindgen(getter)]
-    img: imgs::ImageChoice,
-}
-
-use serde_wasm_bindgen::to_value;
-
-#[wasm_bindgen]
-impl GameApp {
-    #[wasm_bindgen(getter)]
-    pub fn img(&self) -> JsValue {
-        to_value(&self.img).unwrap()
-    }
-}
+use super::GameApp;
 
 impl GameApp {
-    pub fn get_img(&self) -> &imgs::ImageChoice {
-        &self.img
-    }
-
-    pub fn get_ui_state(&mut self) -> &mut state::UiState {
-        &mut self.ui_state
-    }
-
-    pub fn get_game_state(&mut self) -> &mut state::GameState {
-        &mut self.game_state
-    }
-
-    pub fn get_mut_img(&mut self) -> &mut imgs::ImageChoice {
-        &mut self.img
-    }
-}
-
-impl GameApp {
-    // 将Vec<u8>转换为&'static [u8], 确保其拼图碎片拥有和程序一样长的生命周期
     fn get_static_u8(bytes: &[u8]) -> &'static [u8] {
         let x = bytes.to_owned().into_boxed_slice();
         let static_ref = Box::leak(x);
@@ -68,7 +31,7 @@ impl GameApp {
 
     pub fn split_image(&mut self, cc: &egui::Context) {
         self.game_state.create_pieces_index();
-        let mut img = image::load_from_memory(imgs::ImageChoice::chose_pic(&self.img))
+        let mut img = image::load_from_memory(images::ImageChoice::chose_pic(&self.img))
             .expect("Failed to load image");
         let (width, height) = img.dimensions();
         let sub_width = width / self.game_state.count;
@@ -292,35 +255,5 @@ impl GameApp {
             #[cfg(feature = "debug")]
             println!("You win!");
         }
-    }
-
-    pub fn new(_cc: &eframe::CreationContext<'_>) -> anyhow::Result<Self> {
-        //config::custom_font(cc);
-        let app = std::panic::catch_unwind(|| GameApp {
-            game_state: state::GameState::new(),
-            ui_state: state::UiState {
-                nav: state::Nav::Home,
-            },
-            img: imgs::ImageChoice::Image6,
-        })
-        .map_err(|_| anyhow::anyhow!("Failed to initialize game application"))?;
-        Ok(app)
-    }
-}
-
-impl eframe::App for GameApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::CentralPanel::default().show(ctx, |ui| match self.ui_state.nav {
-            state::Nav::Home => {
-                self.home(ctx, ui);
-            }
-            state::Nav::Game => {
-                self.playground(ctx, ui);
-                self.game_side(ctx, ui);
-                if !self.game_state.end && self.game_state.bot {
-                    self.recover();
-                }
-            }
-        });
     }
 }

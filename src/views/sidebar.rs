@@ -2,15 +2,15 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-07 10:31:27
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-17 20:22:08
+ * @LastEditTime: 2025-07-18 11:35:53
  * @FilePath: /jigsaw-puzzle-rust/src/views/sidebar.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 
-use crate::state;
-use crate::{game::GameApp, time::TimeDelta};
+use crate::app::state;
+use crate::{app::GameApp, common::time::TimeDelta};
 use eframe::egui::{self, Button, UiBuilder};
 use std::sync::Mutex;
 
@@ -37,13 +37,13 @@ impl GameApp {
             .collapsible(false)
             .movable(true)
             .show(ctx, |ui| {
-                ui.add(egui::Image::from_uri(self.get_img().get_byte_uri()));
+                ui.add(egui::Image::from_uri(self.img().get_byte_uri()));
             });
     }
 
     pub fn game_side(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
         // 刚开始时不显示原图
-        if self.get_game_state().init {
+        if self.game_state().init {
             set_show_origin_image(false);
         }
 
@@ -58,7 +58,7 @@ impl GameApp {
                     // ui.painter().rect_filled(game_side_rect, 0.0, egui::Color32::from_rgb(255, 255, 0));
                     // ui.spacing_mut().item_spacing = egui::Vec2::new(20.0, 20.0);
                     ui.add_space(50.0);
-                    match self.get_game_state().count {
+                    match self.game_state().count {
                         3 => {
                             ui.label(egui::RichText::new("✨Easy").size(25.0));
                         }
@@ -81,19 +81,19 @@ impl GameApp {
                     let bot_resp = ui.add_sized(
                         [120.0, 40.0],
                         Button::selectable(
-                            self.get_game_state().bot,
+                            self.game_state().bot,
                             egui::RichText::new("🎱 Bot").size(21.0),
                         ),
                     );
 
                     if bot_resp.clicked() {
-                        match self.get_game_state().bot {
-                            true => self.get_game_state().bot = false,
-                            false => self.get_game_state().bot = true,
+                        match self.game_state().bot {
+                            true => self.game_state().bot = false,
+                            false => self.game_state().bot = true,
                         }
                     }
 
-                    if self.get_game_state().bot {
+                    if self.game_state().bot {
                         ui.add_space(5.0);
                         ui.label(
                             egui::RichText::new("🎉 Magic show")
@@ -116,7 +116,7 @@ impl GameApp {
                             .on_hover_ui(|ui| {
                                 ui.add_sized(
                                     [200.0, 200.0],
-                                    egui::Image::from_uri(self.get_img().get_byte_uri()),
+                                    egui::Image::from_uri(self.img().get_byte_uri()),
                                 );
                             });
 
@@ -141,11 +141,11 @@ impl GameApp {
                         );
 
                         if return_resp.clicked() {
-                            self.get_ui_state().nav = state::Nav::Home;
-                            self.get_game_state().reset_game_state();
+                            self.ui_state().nav = state::Nav::Home;
+                            self.game_state().reset_game_state();
                         }
 
-                        let time_dispaly = match self.get_game_state().challenge {
+                        let time_dispaly = match self.game_state().challenge {
                             true => self.get_rest_time_str(),
                             false => self.get_elasp_time_str(),
                         };
@@ -166,11 +166,11 @@ impl GameApp {
 
                         // 挑战模式时时间为红色和绿色
                         // 非挑战模式时时间为蓝色
-                        let time_color = if self.get_game_state().challenge
-                            && self.get_game_state().rest < TimeDelta::seconds(21)
+                        let time_color = if self.game_state().challenge
+                            && self.game_state().rest < TimeDelta::seconds(21)
                         {
                             egui::Color32::LIGHT_RED
-                        } else if self.get_game_state().challenge {
+                        } else if self.game_state().challenge {
                             egui::Color32::LIGHT_GREEN
                         } else {
                             egui::Color32::LIGHT_BLUE
@@ -186,7 +186,7 @@ impl GameApp {
                         // 请求重绘保证时间连续变化
                         ui.ctx().request_repaint();
 
-                        if self.get_game_state().end && !self.get_game_state().win {
+                        if self.game_state().end && !self.game_state().win {
                             //ui.is_visible();
                             ui.add_sized(
                                 [80.0, 19.0],

@@ -2,14 +2,14 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2023-11-09 01:25:23
- * @FilePath: \puzzle\src\state.rs
+ * @LastEditTime: 2025-07-18 11:35:39
+ * @FilePath: /jigsaw-puzzle-rust/src/app/state.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 
-use crate::time::{TimeDelta, TimeStamp};
+use crate::common::time::{TimeDelta, TimeStamp};
 
 #[derive(Clone, Copy)]
 pub enum Nav {
