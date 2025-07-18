@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2025-07-18 11:40:23
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 14:07:45
+ * @LastEditTime: 2025-07-18 15:00:53
  * @FilePath: /jigsaw-puzzle-rust/src/app/game.rs
  * @Description:
  *
@@ -207,7 +207,7 @@ impl GameApp {
         } else {
             let minutes = self.game_state.duration.num_minutes();
             let seconds = self.game_state.duration.num_seconds();
-            format!("{:02}:{:02}", minutes, seconds)
+            format!("{minutes:02}:{seconds:02}")
         }
     }
 
@@ -230,7 +230,7 @@ impl GameApp {
         } else {
             let minutes = self.game_state.rest.num_minutes();
             let seconds = self.game_state.rest.num_seconds();
-            format!("{:02}:{:02}", minutes, seconds)
+            format!("{minutes:02}:{seconds:02}")
         }
     }
 

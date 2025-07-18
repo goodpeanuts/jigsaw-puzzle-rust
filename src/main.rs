@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 11:40:44
+ * @LastEditTime: 2025-07-18 15:01:07
  * @FilePath: /jigsaw-puzzle-rust/src/main.rs
  * @Description:
  *
@@ -32,9 +32,9 @@ fn main() -> Result<(), eframe::Error> {
             match app::GameApp::new(cc) {
                 Ok(app) => Ok(Box::new(app)),
                 Err(e) => {
-                    eprintln!("Failed to create GameApp: {}", e);
+                    eprintln!("Failed to create GameApp: {e}");
                     // 直接 panic，让 eframe 处理
-                    panic!("Failed to initialize game application: {}", e);
+                    panic!("Failed to initialize game application: {e}");
                 }
             }
         }),
@@ -73,9 +73,9 @@ fn main() {
                     match app::GameApp::new(cc) {
                         Ok(app) => Ok(Box::new(app)),
                         Err(e) => {
-                            log::error!("Failed to create GameApp: {}", e);
+                            log::error!("Failed to create GameApp: {e}");
                             // 直接 panic，让 eframe 处理
-                            panic!("Failed to initialize game application: {}", e);
+                            panic!("Failed to initialize game application: {e}");
                         }
                     }
                 }),

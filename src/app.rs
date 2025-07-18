@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 14:22:24
+ * @LastEditTime: 2025-07-18 15:00:25
  * @FilePath: /jigsaw-puzzle-rust/src/app.rs
  * @Description:
  *
@@ -43,7 +43,7 @@ impl GameApp {
 
     pub fn new(_cc: &eframe::CreationContext<'_>) -> anyhow::Result<Self> {
         #[cfg(feature = "chinese")]
-        crate::common::config::custom_font(cc);
+        crate::common::config::custom_font(_cc);
 
         let app = std::panic::catch_unwind(|| GameApp {
             game_state: state::GameState::new(),

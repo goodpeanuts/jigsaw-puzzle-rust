@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 11:41:34
+ * @LastEditTime: 2025-07-18 14:59:28
  * @FilePath: /jigsaw-puzzle-rust/src/common/config.rs
  * @Description: help display chinese characters in egui
  *
@@ -11,6 +11,7 @@
 
 #[cfg(feature = "chinese")]
 pub fn custom_font(cc: &eframe::CreationContext<'_>) {
+    use eframe::egui;
     // Start with the default fonts (we will be adding to them rather than replacing them).
     let mut fonts = egui::FontDefinitions::default();
 
