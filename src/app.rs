@@ -44,7 +44,7 @@ impl GameApp {
     pub fn new(_cc: &eframe::CreationContext<'_>) -> anyhow::Result<Self> {
         #[cfg(feature = "chinese")]
         crate::common::config::custom_font(cc);
-        
+
         let app = std::panic::catch_unwind(|| GameApp {
             game_state: state::GameState::new(),
             ui_state: state::UiState {

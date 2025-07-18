@@ -19,7 +19,7 @@ impl GameApp {
     }
 
     fn content(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
-       //ui.add_sized([800.0, 900.0], egui::Image::from_uri(imgs::IMAGE_URI_background));
+        //ui.add_sized([800.0, 900.0], egui::Image::from_uri(imgs::IMAGE_URI_background));
         // 这里分配一块空白区域，用于将文字和开始挤到中间
         ui.allocate_at_least(egui::vec2(1200.0, 400.0), egui::Sense::hover());
         ui.allocate_ui_with_layout(
@@ -40,7 +40,6 @@ impl GameApp {
                     } else {
                         ui.label(egui::RichText::new("🎉 Jigsaw Puzzle").size(32.0));
                     }
-
                 });
 
                 ui.scope_builder(
