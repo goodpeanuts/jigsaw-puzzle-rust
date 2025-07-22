@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2025-07-18 11:40:23
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 15:00:53
+ * @LastEditTime: 2025-07-21 17:54:11
  * @FilePath: /jigsaw-puzzle-rust/src/app/game.rs
  * @Description:
  *
@@ -23,6 +23,61 @@ use crate::{
 use super::GameApp;
 
 impl GameApp {
+    // 对局开始初始化，设置碎片个数并打乱，设置计时模式
+    pub fn game_init(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui) {
+        // 如果是挑战模式，设置时间限制
+        if self.game_state().challenge {
+            match self.game_state().count {
+                2 => {
+                    self.game_state().limit = TimeDelta::seconds(10);
+                }
+                3 => {
+                    self.game_state().limit = TimeDelta::seconds(15);
+                }
+                5 => {
+                    self.game_state().limit = TimeDelta::seconds(90);
+                }
+                8 => {
+                    self.game_state().limit = TimeDelta::seconds(480);
+                }
+                _ => {
+                    let game_state_count = self.game_state().count as f64;
+                    let new_limit = self.calculate_time_limit(game_state_count);
+                    self.game_state().limit = TimeDelta::seconds(new_limit);
+                }
+            }
+        }
+        #[cfg(feature = "debug")]
+        println!("1 set game_state.limit success");
+
+        self.game_state().start = TimeStamp::instant();
+
+        #[cfg(feature = "debug")]
+        println!("2 set game_state.start success");
+
+        // 获取还原碎片的遍历数组
+        self.get_recovery();
+        self.shuffle_pieces();
+
+        #[cfg(feature = "debug")]
+        println!("3 shuffle_pieces success");
+        self.split_image(ctx);
+
+        #[cfg(feature = "debug")]
+        println!("4 split_image success");
+
+        // 防止有人设置碎片为 1*1 , (*/ω＼*)
+        self.check_game();
+
+        #[cfg(feature = "debug")]
+        println!("5 init success");
+
+        #[cfg(feature = "debug")]
+        println!("init set flase");
+
+        self.game_state().init = false;
+    }
+
     fn get_static_u8(bytes: &[u8]) -> &'static [u8] {
         let x = bytes.to_owned().into_boxed_slice();
         let static_ref = Box::leak(x);
@@ -226,7 +281,7 @@ impl GameApp {
             self.game_state.end = true;
             "00:00".to_string()
         } else if self.game_state.rest < TimeDelta::seconds(60) {
-            format!("{:.2}", self.game_state.rest.num_seconds())
+            format!("00:{:02}", self.game_state.rest.num_seconds())
         } else {
             let minutes = self.game_state.rest.num_minutes();
             let seconds = self.game_state.rest.num_seconds();

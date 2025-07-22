@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 15:00:25
+ * @LastEditTime: 2025-07-18 17:57:34
  * @FilePath: /jigsaw-puzzle-rust/src/app.rs
  * @Description:
  *
@@ -48,7 +48,7 @@ impl GameApp {
         let app = std::panic::catch_unwind(|| GameApp {
             game_state: state::GameState::new(),
             ui_state: state::UiState {
-                nav: state::Nav::Home,
+                nav: crate::views::Nav::Home,
             },
             img: images::ImageChoice::Image6,
         })

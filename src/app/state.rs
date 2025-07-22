@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 11:35:39
+ * @LastEditTime: 2025-07-18 17:57:28
  * @FilePath: /jigsaw-puzzle-rust/src/app/state.rs
  * @Description:
  *
@@ -10,12 +10,6 @@
  */
 
 use crate::common::time::{TimeDelta, TimeStamp};
-
-#[derive(Clone, Copy)]
-pub enum Nav {
-    Home,
-    Game,
-}
 
 #[derive(Clone)]
 pub struct Piece {
@@ -120,5 +114,5 @@ impl GameState {
 
 #[derive(Clone, Copy)]
 pub struct UiState {
-    pub nav: Nav,
+    pub nav: crate::views::Nav,
 }
