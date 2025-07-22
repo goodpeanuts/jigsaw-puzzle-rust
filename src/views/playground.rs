@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:15:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-22 10:18:04
+ * @LastEditTime: 2025-07-22 19:10:02
  * @FilePath: /jigsaw-puzzle-rust/src/views/playground.rs
  * @Description:
  *
@@ -17,8 +17,12 @@ use egui_extras::{Size, StripBuilder};
 
 use std::sync::Mutex;
 
+use super::{get_global_ui_direction, DisplayDirection};
+
+const PIECE_OFFSET_RATIO: f32 = 0.05;
+
 lazy_static::lazy_static! {
-    static ref SHOW_CONGRULATION: Mutex<bool> = Mutex::new(false);
+    pub static ref SHOW_CONGRULATION: Mutex<bool> = Mutex::new(false);
 }
 
 pub fn set_show_congrulation(value: bool) {
@@ -37,37 +41,72 @@ impl GameApp {
             let margin_rect =
                 egui::Rect::from_min_max(full_rect.min + vec2(margin, margin), full_rect.max);
 
-            ui.scope_builder(UiBuilder::new().max_rect(margin_rect), |ui| {
-                StripBuilder::new(ui)
-                    .size(Size::relative(0.85))
-                    .size(Size::relative(0.15))
-                    .horizontal(|mut strip| {
-                        strip.cell(|ui| {
-                            egui::Frame::new()
-                                .fill(egui::Color32::from_additive_luminance(8))
-                                .show(ui, |ui| {
-                                    self.puzzle(ctx, ui);
+            let direction = get_global_ui_direction();
+            if direction == DisplayDirection::Unknown {
+                ui.colored_label(egui::Color32::RED, "Failed to get Display direction");
+            }
+
+            match direction {
+                DisplayDirection::Vertical => {
+                    ui.scope_builder(UiBuilder::new().max_rect(margin_rect), |ui| {
+                        StripBuilder::new(ui)
+                            .size(Size::relative(0.8))
+                            .size(Size::relative(0.2))
+                            .vertical(|mut strip| {
+                                strip.cell(|ui| {
+                                    egui::Frame::new()
+                                        .fill(egui::Color32::from_additive_luminance(8))
+                                        .show(ui, |ui| {
+                                            self.puzzle(ctx, ui);
+                                        });
                                 });
-                        });
-                        strip.cell(|ui| {
-                            egui::Frame::new()
-                                .fill(egui::Color32::from_additive_luminance(8))
-                                .show(ui, |ui| {
-                                    ui.centered_and_justified(|ui| {
-                                        self.game_side(ctx, ui);
-                                    });
+                                strip.cell(|ui| {
+                                    egui::Frame::new()
+                                        .fill(egui::Color32::from_additive_luminance(8))
+                                        .show(ui, |ui| {
+                                            ui.horizontal_centered(|ui| {
+                                                self.game_side(ctx, ui);
+                                            });
+                                        });
                                 });
-                        });
-                    });
-            })
+                            });
+                    })
+                }
+                _ => {
+                    // display horizontal and default
+                    ui.scope_builder(UiBuilder::new().max_rect(margin_rect), |ui| {
+                        StripBuilder::new(ui)
+                            .size(Size::relative(0.85))
+                            .size(Size::relative(0.15))
+                            .horizontal(|mut strip| {
+                                strip.cell(|ui| {
+                                    egui::Frame::new()
+                                        .fill(egui::Color32::from_additive_luminance(8))
+                                        .show(ui, |ui| {
+                                            self.puzzle(ctx, ui);
+                                        });
+                                });
+                                strip.cell(|ui| {
+                                    egui::Frame::new()
+                                        .fill(egui::Color32::from_additive_luminance(8))
+                                        .show(ui, |ui| {
+                                            ui.centered_and_justified(|ui| {
+                                                self.game_side(ctx, ui);
+                                            });
+                                        });
+                                });
+                            });
+                    })
+                }
+            }
         });
     }
 
-    fn puzzle(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
+    fn puzzle(&mut self, _ctx: &egui::Context, ui: &mut egui::Ui) {
         let count = self.game_state().count;
         let full = ui.available_size();
         let square_len = f32::min(full.x, full.y);
-        let offset = square_len * 0.02;
+        let offset = square_len * PIECE_OFFSET_RATIO;
         let offset_pos = egui::pos2(offset, offset);
         let square_stroke_width = square_len * 0.008;
         let square_vec2 = egui::Vec2::new(square_len, square_len);
@@ -175,25 +214,28 @@ impl GameApp {
                 }
             });
         }
-        if self.game_state().win {
-            self.congratulation(ctx, ui, &mut SHOW_CONGRULATION.lock().unwrap());
-        }
     }
 
-    fn congratulation(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui, is_open: &mut bool) {
+    pub(crate) fn congratulation(
+        &mut self,
+        ctx: &egui::Context,
+        _ui: &mut egui::Ui,
+        is_open: &mut bool,
+    ) {
+        let available_width = f32::min(ctx.screen_rect().width(), ctx.screen_rect().height());
+        let windows_width = available_width * 0.8;
         egui::Window::new("💕Congratulations")
             .title_bar(true)
-            .fixed_pos(egui::pos2(0.0, 0.0))
             .open(is_open)
-            .fixed_size([900.0, 900.0])
+            .default_size([windows_width, windows_width])
             .default_open(true)
+            .movable(true)
             .collapsible(false)
-            .default_size(egui::vec2(900.0, 900.0))
             .show(ctx, |ui| {
                 ui.vertical_centered_justified(|ui| {
                     ui.label(egui::RichText::new("YOU MADE IT！").size(20.0));
                     ui.add_sized(
-                        [800.0, 800.0],
+                        [windows_width, windows_width],
                         egui::Image::from_uri(self.img().get_byte_uri()),
                     );
                 });

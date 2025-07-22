@@ -2,13 +2,15 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 15:01:07
+ * @LastEditTime: 2025-07-22 16:12:44
  * @FilePath: /jigsaw-puzzle-rust/src/main.rs
  * @Description:
  *
  * Copyright (c) 2023 by goodpeanuts, All Rights Reserved.
  */
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
+
+use std::sync::Mutex;
 
 use puzzle::app;
 use puzzle::common::load_images;
@@ -26,7 +28,7 @@ fn main() -> Result<(), eframe::Error> {
         "WHO IS GOODPEANUTS",
         options,
         Box::new(|cc| {
-            load_images(&cc.egui_ctx);
+            init_app(&cc.egui_ctx);
 
             // 使用 new 来安全创建 GameApp (现在返回 Result)
             match app::GameApp::new(cc) {
@@ -67,7 +69,7 @@ fn main() {
                 canvas,
                 web_options,
                 Box::new(|cc| {
-                    load_images(&cc.egui_ctx);
+                    init_app(&cc.egui_ctx);
 
                     // 使用 new 来安全创建 GameApp (现在返回 Result)
                     match app::GameApp::new(cc) {
@@ -97,4 +99,10 @@ fn main() {
             }
         }
     });
+}
+
+pub fn init_app(cc: &eframe::egui::Context) {
+    load_images(cc);
+    let _global_ui_state = puzzle::views::GLOBAL_UI_STATE
+        .get_or_init(|| Mutex::new(puzzle::views::GlobalUIState::new(cc)));
 }

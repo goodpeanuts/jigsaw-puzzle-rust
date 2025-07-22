@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-05 22:23:38
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-21 16:28:25
+ * @LastEditTime: 2025-07-22 19:25:57
  * @FilePath: /jigsaw-puzzle-rust/src/views/home.rs
  * @Description:
  *
@@ -14,6 +14,11 @@ use crate::views::custom_widget::toggle;
 use eframe::egui::{self, Button, CentralPanel, UiBuilder, Vec2};
 use egui_extras::{Size, StripBuilder};
 
+use super::{
+    get_global_ui_direction, DisplayDirection, BUTTON_FONT_SIZE_MAX, BUTTON_FONT_SIZE_RATIO,
+    BUTTON_SIZE_RATIO,
+};
+
 impl GameApp {
     pub fn home(&mut self, ctx: &egui::Context, _ui: &mut egui::Ui) {
         CentralPanel::default().show(ctx, |ui| {
@@ -23,39 +28,102 @@ impl GameApp {
             let margin = f32::max(margin_x, margin_y);
             let full_rect = egui::Rect::from_min_max(ui.min_rect().min, ui.min_rect().max);
 
-            ui.scope_builder(UiBuilder::new().max_rect(full_rect), |ui| {
-                StripBuilder::new(ui)
-                    .size(Size::relative(0.25)) // 左列
-                    .size(Size::relative(0.50)) // 中列
-                    .size(Size::relative(0.25)) // 右列
-                    .horizontal(|mut strip| {
-                        strip.cell(|_| {}); // 左列空
-                        strip.cell(|ui| {
-                            ui.centered_and_justified(|ui| {
-                                ui.label(egui::RichText::new("✨ Jigsaw Puzzle").size(32.0));
-                            });
-                        });
-                        strip.cell(|ui| {
-                            egui::Frame::new()
-                                .fill(egui::Color32::from_additive_luminance(8))
-                                .inner_margin(margin)
-                                .outer_margin(margin * 0.05)
-                                .corner_radius(10.0) // 圆角
-                                .inner_margin(8.0) // 内边距
-                                .show(ui, |ui| {
-                                    ui.centered_and_justified(|ui| self.right(ctx, ui));
+            let direction = get_global_ui_direction();
+            if direction == DisplayDirection::Unknown {
+                ui.colored_label(egui::Color32::RED, "Failed to get Display direction");
+            }
+            match direction {
+                super::DisplayDirection::Vertical => {
+                    ui.scope_builder(UiBuilder::new().max_rect(full_rect), |ui| {
+                        StripBuilder::new(ui)
+                            .size(Size::relative(0.04))
+                            .size(Size::relative(0.96))
+                            .vertical(|mut strip| {
+                                strip.cell(|ui| {
+                                    ui.label(egui::RichText::new("✨ Jigsaw Puzzle").size(32.0));
                                 });
-                        });
+                                strip.cell(|ui| {
+                                    ui.vertical_centered(|ui| {
+                                        egui::Frame::new()
+                                            .fill(egui::Color32::from_additive_luminance(8))
+                                            .inner_margin(margin)
+                                            .outer_margin(margin * 0.18)
+                                            .corner_radius(10.0)
+                                            .inner_margin(8.0)
+                                            .show(ui, |ui| {
+                                                ui.scope_builder(UiBuilder::new(), |ui| {
+                                                    StripBuilder::new(ui)
+                                                        .size(Size::relative(0.8))
+                                                        .size(Size::relative(0.2))
+                                                        .vertical(|mut strip| {
+                                                            strip.cell(|ui| {
+                                                                self.show_image(ui);
+                                                                self.choose_image(ui);
+                                                                self.game_mode_choice(ui);
+                                                            });
+                                                            strip.cell(|ui| {
+                                                                ui.scope_builder(
+                                                                    UiBuilder::new(),
+                                                                    |ui| {
+                                                                        StripBuilder::new(ui)
+                                                        .size(Size::relative(0.3))
+                                                        .size(Size::relative(0.7))
+                                                        .horizontal(|mut strip| {
+                                                            strip
+                                                                .cell(|ui| self.game_challange(ui));
+                                                            strip.cell(|ui| {
+                                                                ui.vertical_centered(|ui| self.game_start(ctx, ui));
+                                                            });
+                                                        })
+                                                                    },
+                                                                );
+                                                            });
+                                                        })
+                                                });
+                                            });
+                                    });
+                                });
+                            });
                     });
-            })
+                }
+                _ => {
+                    ui.scope_builder(UiBuilder::new().max_rect(full_rect), |ui| {
+                        StripBuilder::new(ui)
+                            .size(Size::relative(0.25)) // 左列
+                            .size(Size::relative(0.50)) // 中列
+                            .size(Size::relative(0.25)) // 右列
+                            .horizontal(|mut strip| {
+                                strip.cell(|_| {}); // 左列空
+                                strip.cell(|ui| {
+                                    ui.centered_and_justified(|ui| {
+                                        ui.label(
+                                            egui::RichText::new("✨ Jigsaw Puzzle").size(32.0),
+                                        );
+                                    });
+                                });
+                                strip.cell(|ui| {
+                                    egui::Frame::new()
+                                        .fill(egui::Color32::from_additive_luminance(8))
+                                        .inner_margin(margin)
+                                        .outer_margin(margin * 0.05)
+                                        .corner_radius(10.0) // 圆角
+                                        .inner_margin(8.0) // 内边距
+                                        .show(ui, |ui| {
+                                            ui.centered_and_justified(|ui| self.right(ctx, ui));
+                                        });
+                                });
+                            });
+                    });
+                }
+            }
         });
     }
 
     fn right(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
         StripBuilder::new(ui)
-            .size(Size::relative(0.6)) // 上：图像区域占 60%
-            .size(Size::relative(0.2)) // 中：模式选择
-            .size(Size::relative(0.2)) // 下：开始区
+            .size(Size::relative(0.4)) // 上：图像区域占 60%
+            .size(Size::relative(0.5)) // 中：模式选择
+            .size(Size::relative(0.1)) // 下：开始区
             .vertical(|mut strip| {
                 strip.cell(|ui| {
                     self.show_image(ui);
@@ -63,6 +131,7 @@ impl GameApp {
                 });
                 strip.cell(|ui| {
                     self.game_mode_choice(ui);
+                    self.game_challange(ui);
                 });
                 strip.cell(|ui| {
                     self.game_start(ctx, ui);
@@ -306,7 +375,7 @@ impl GameApp {
         });
     }
 
-    fn game_start(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
+    fn game_challange(&mut self, ui: &mut egui::Ui) {
         let avail = ui.available_size();
         let col_width = ui.available_width(); // 当前列的宽度
         let col_height = avail.y;
@@ -320,16 +389,22 @@ impl GameApp {
 
                 ui.add(toggle(&mut self.game_state().challenge));
             });
+    }
+
+    fn game_start(&mut self, ctx: &egui::Context, ui: &mut egui::Ui) {
+        let available = f32::max(ui.available_size().y, ui.available_size().x);
+        let button_font_size = f32::min(BUTTON_FONT_SIZE_MAX, available * BUTTON_FONT_SIZE_RATIO);
+        let button_size = available * BUTTON_SIZE_RATIO; // 改为和其他按钮一样的大小
+
+        ui.visuals_mut().widgets.hovered.weak_bg_fill = egui::Color32::LIGHT_GREEN;
 
         // 动态尺寸
-        let button_width = col_width * 0.4;
-        let button_height = col_height * 0.4;
-        let spacing = col_height * 0.02;
+        let spacing = available * 0.02;
         ui.vertical_centered(|ui| {
             let start_resp = ui
                 .add_sized(
-                    [button_width, button_height],
-                    Button::new(egui::RichText::new("Start").size(button_width * 0.25)),
+                    [button_size, button_size * 0.4],
+                    Button::new(egui::RichText::new("Start").size(button_font_size)),
                 )
                 .clicked();
 
@@ -343,7 +418,7 @@ impl GameApp {
             if self.game_state().challenge {
                 ui.label(
                     egui::RichText::new("Time is not unlimited")
-                        .size(button_height * 0.2)
+                        .size(button_size * 0.09)
                         .color(egui::Color32::from_rgb(178, 102, 255)),
                 );
             }

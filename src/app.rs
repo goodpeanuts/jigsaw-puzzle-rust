@@ -2,7 +2,7 @@
  * @Author: goodpeanuts goodpeanuts@foxmail.com
  * @Date: 2023-11-03 14:35:18
  * @LastEditors: goodpeanuts goodpeanuts@foxmail.com
- * @LastEditTime: 2025-07-18 17:57:34
+ * @LastEditTime: 2025-07-22 19:02:20
  * @FilePath: /jigsaw-puzzle-rust/src/app.rs
  * @Description:
  *
@@ -54,5 +54,18 @@ impl GameApp {
         })
         .map_err(|_| anyhow::anyhow!("Failed to initialize game application"))?;
         Ok(app)
+    }
+}
+
+pub enum AppError {
+    ShowInfoLable(String),
+    Other,
+}
+
+impl AppError {
+    pub(crate) fn show(&self, ui: &mut eframe::egui::Ui) {
+        if let AppError::ShowInfoLable(error_message) = self {
+            let _ = ui.colored_label(eframe::egui::Color32::RED, error_message);
+        }
     }
 }
