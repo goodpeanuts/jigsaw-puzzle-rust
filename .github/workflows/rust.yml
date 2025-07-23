@@ -1,4 +1,10 @@
-on: [push, pull_request, workflow_dispatch]
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 每周二北京时间8点执行 (UTC时间周二00:00，北京时间+8小时=08:00)
+    - cron: '0 0 * * 2'
 
 name: CI
 
